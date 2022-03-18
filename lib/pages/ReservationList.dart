@@ -609,7 +609,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
         children: [
           CircularProgressIndicator(),
           Container(
-              margin: EdgeInsets.only(left: 7), child: Text("Caricamento...")),
+              margin: EdgeInsets.only(left: 7), child: Text("Caricamento.........")),
         ],
       ),
     );
