@@ -60,7 +60,6 @@ class _ClubDetails extends State<ClubDetails> {
         Row(
           children: [
             Container(
-                decoration: BoxDecoration(color: Color.fromRGBO(255, 238, 191, 1)),
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width,
                 child: Container(

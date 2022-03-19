@@ -10,6 +10,8 @@ import 'package:quickplay/widgets/FilterPopup.dart';
 import 'package:quickplay/widgets/snackbar.dart';
 import 'package:quickplay/widgets/HelpPopup.dart';
 
+import 'ClubDetail.dart';
+
 class EffettuaPrenotazione extends StatefulWidget {
   const EffettuaPrenotazione({Key key, this.campiPerSport, this.data})
       : super(key: key);
@@ -64,67 +66,101 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
     super.initState();
   }
 
+  Future<bool> onBackPressed() {
+    Navigator.pop(context, false);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (clubMarkers.isEmpty) {
       aggiornaFiltri();
     }
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            markers: clubMarkers,
-            initialCameraPosition: CameraPosition(
-              target: _center,
-              zoom: 11.0,
+    return WillPopScope(
+      onWillPop: onBackPressed,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: AppBar(backgroundColor: Colors.white,).preferredSize,
+            child: SafeArea(
+              child: PreferredSize(
+                  preferredSize: Size.fromHeight(100.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: 30,
+                        child: Container(
+                            margin: EdgeInsets.only(
+                              left: 10,
+                              top: 5,
+                            ),
+                            child: IconButton(
+                              color: Colors.black,
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                              ),
+                              onPressed: onBackPressed,
+                            )),
+                      ),
+                    ],
+                  )),
             ),
           ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.8,
-            right: MediaQuery.of(context).size.width * 0.65,
-            child: FloatingActionButton.extended(
-              heroTag: "btn1",
-              backgroundColor: const Color.fromRGBO(97, 93, 93, 1),
-              foregroundColor: Colors.black,
-              onPressed: () async {
-                var returnedFilters = await showDialog(context: context, builder: (BuildContext context)=>
-                  FiltersPopup(_selectedSurface, prezzo, distanza, coperto, docce, riscaldamento));
-                if(returnedFilters!=null){
-                  coperto = returnedFilters["coperto"];
-                  riscaldamento = returnedFilters["riscaldamento"];
-                  docce = returnedFilters["docce"];
-                  distanza = returnedFilters["distanza"];
-                  prezzo = returnedFilters["prezzo"];
-                  _selectedSurface = returnedFilters["superficie"];
-                  aggiornaFiltri();
-                }
-              },
-              icon: Icon(Icons.filter_alt),
-              label: Text('FILTRI'),
-            ),
+          body: Stack(
+            children: [
+              GoogleMap(
+                onMapCreated: _onMapCreated,
+                markers: clubMarkers,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 11.0,
+                ),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.7,
+                right: MediaQuery.of(context).size.width * 0.65,
+                child: FloatingActionButton.extended(
+                  heroTag: "btn1",
+                  backgroundColor: const Color.fromRGBO(97, 93, 93, 1),
+                  foregroundColor: Colors.black,
+                  onPressed: () async {
+                    var returnedFilters = await showDialog(context: context, builder: (BuildContext context)=>
+                        FiltersPopup(_selectedSurface, prezzo, distanza, coperto, docce, riscaldamento));
+                    if(returnedFilters!=null){
+                      coperto = returnedFilters["coperto"];
+                      riscaldamento = returnedFilters["riscaldamento"];
+                      docce = returnedFilters["docce"];
+                      distanza = returnedFilters["distanza"];
+                      prezzo = returnedFilters["prezzo"];
+                      _selectedSurface = returnedFilters["superficie"];
+                      aggiornaFiltri();
+                    }
+                  },
+                  icon: Icon(Icons.filter_alt),
+                  label: Text('FILTRI'),
+                ),
+              ),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.8,
+                right: MediaQuery.of(context).size.width * 0.65,
+                child: FloatingActionButton.extended(
+                  heroTag: "btn2",
+                  backgroundColor: const Color.fromRGBO(114, 180, 71, 1),
+                  foregroundColor: Colors.black,
+                  onPressed: () {
+
+                    showDialog(context: context, builder: (BuildContext context)=> HelpPopup());
+
+                  },
+                  icon: Icon(Icons.help),
+                  label: Text('AIUTO'),
+                ),
+              )
+            ],
           ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.9,
-            right: MediaQuery.of(context).size.width * 0.65,
-            child: FloatingActionButton.extended(
-              heroTag: "btn2",
-              backgroundColor: const Color.fromRGBO(114, 180, 71, 1),
-              foregroundColor: Colors.black,
-              onPressed: () {
-
-                showDialog(context: context, builder: (BuildContext context)=> HelpPopup());
-
-              },
-              icon: Icon(Icons.help),
-              label: Text('AIUTO'),
-            ),
-          )
-        ],
-      ),
+        )
     );
+
   }
 
   //legge i filtri e chiama il metodo che restituisce i circoli corrispondenti
@@ -193,7 +229,7 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ClubDetails(
+                                  builder: (context) => ClubDetail(
                                       campi: campiDaInviare,
                                       circolo: element,
                                       data: data)));
