@@ -6,8 +6,8 @@ import 'package:quickplay/ViewModel/DB_Handler_Clubs.dart';
 import 'package:quickplay/models/models.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quickplay/pages/ClubDetails.dart';
+import 'package:quickplay/widgets/FilterPopup.dart';
 import 'package:quickplay/widgets/snackbar.dart';
-import 'package:quickplay/widgets/FiltersPopup.dart';
 import 'package:quickplay/widgets/HelpPopup.dart';
 
 class EffettuaPrenotazione extends StatefulWidget {
@@ -59,7 +59,7 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
 
   @override
   void initState() {
-    distanza = "20";
+    distanza = "70";
     prezzo = "";
     super.initState();
   }
@@ -71,6 +71,7 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
     }
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           GoogleMap(
@@ -90,7 +91,7 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
               foregroundColor: Colors.black,
               onPressed: () async {
                 var returnedFilters = await showDialog(context: context, builder: (BuildContext context)=>
-                  FilterPopup(_selectedSurface, prezzo, distanza, coperto, docce, riscaldamento));
+                  FiltersPopup(_selectedSurface, prezzo, distanza, coperto, docce, riscaldamento));
                 if(returnedFilters!=null){
                   coperto = returnedFilters["coperto"];
                   riscaldamento = returnedFilters["riscaldamento"];
