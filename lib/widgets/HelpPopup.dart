@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -48,7 +50,7 @@ class _HelpPopup extends State<HelpPopup> {
               ),
               TextSpan(
                   style: TextStyle(color: Colors.black, fontSize: 18),
-                  text: "La tua posizione invece sarà marcata in"),
+                  text: "La tua posizione invece sarà marcata in "),
               TextSpan(
                 style: TextStyle(
                     color: Colors.indigo,
@@ -65,7 +67,7 @@ class _HelpPopup extends State<HelpPopup> {
       child: RichText(
           text: TextSpan(
               style: TextStyle(color: Colors.black, fontSize: 18),
-              text: "Per accedere alla lista dei campi di uno specifico circolo bisognera :\n\n",
+              text: "Per accedere alla lista dei campi di uno specifico circolo bisognerà:\n\n",
             children: [
               TextSpan(
                 style: TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),
@@ -80,6 +82,10 @@ class _HelpPopup extends State<HelpPopup> {
 
   @override
   Widget build(BuildContext context) {
+    String changeText;
+    if(slideNumber == 0) changeText = "Chiudi";
+      else if(slideNumber != 0) changeText = "Indietro";
+
     return Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
@@ -93,48 +99,78 @@ class _HelpPopup extends State<HelpPopup> {
               elevation: 2.0,
               color: Colors.white, //Colore interno
               shape: new RoundedRectangleBorder(
-                  side: new BorderSide(color: Colors.black, width: 3.0),
-                  borderRadius: BorderRadius.circular(8.0)),
+                  side: new BorderSide(color: Colors.black, width: 1.0),
+                  borderRadius: BorderRadius.circular(10.0)),
               child: Column(children: [
-                SizedBox(height: 20),
-                Center(
-                  child: Text(
-                    "GUIDA",
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.red,
-                    decoration: TextDecoration.underline),
-                  ),
-                ),
-                SizedBox(height: 40),
-                Align(
-                  alignment: Alignment.center,
-                  child: contents[slideNumber],
-                ),
-                SizedBox(height: 40),
-                Align(
-                  alignment: FractionalOffset.bottomRight,
-                  child: TextButton(
-                    child: Container(
-                      margin: EdgeInsets.only(right: 20),
-                      child: Text("Avanti",
+                Expanded(
+                  flex: 2,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "GUIDA",
                           style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline,
-                              fontSize: 18)),
-                    ),
-                    onPressed: () {
-                      slideNumber += 1;
-                      if (slideNumber == 3) {
-                        Navigator.pop(context);
-                      } else {
-                        setState(() {});
-                      }
-                    },
+                              color: Colors.red,
+                              fontFamily: "sans-serif-medium",
+                              fontSize: 25
+                          ),
+                        ),
+                      )
+                ),
+                Expanded(
+                  flex: 8,
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: contents[slideNumber],
                   ),
-                )
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              child: Text(changeText,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 18)),
+                              onPressed: () {
+                                slideNumber -= 1;
+                                if (slideNumber == -1) {
+                                  Navigator.pop(context);
+                                } else {
+                                  setState(() {});
+                                }
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: TextButton(
+                              child: Text("Avanti",
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 18)),
+                              onPressed: () {
+                                slideNumber += 1;
+                                if (slideNumber == 3) {
+                                  Navigator.pop(context);
+                                } else {
+                                  setState(() {});
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      )
+                  ),
+
+                ),
+
               ])),
         ));
   }
