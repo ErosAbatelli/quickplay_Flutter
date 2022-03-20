@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Courts.dart';
 import 'package:quickplay/models/models.dart';
 import 'package:quickplay/pages/home_Menu.dart';
@@ -196,9 +197,7 @@ class _createSelezione1 extends State<Selezione1> {
                             context, const Text("Inserisci tutti i campi"));
                       } else {
                         //Trova i campi per quello sport
-                        List<Court> campiPerSport =
-                            await DB_Handler_Courts.getCourtsBySport(
-                                _selectedItem.toLowerCase());
+                        List<Court> campiPerSport = await DB_Handler_Courts.getCourtsBySport(_selectedItem.toLowerCase());
 
 
                         //cambia page
@@ -244,6 +243,7 @@ class _createSelezione1 extends State<Selezione1> {
       date = newDate;
     });
   }
+
 }
 
 class ButtonHeaderWidget extends StatelessWidget {

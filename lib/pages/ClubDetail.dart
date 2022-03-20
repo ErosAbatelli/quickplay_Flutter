@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickplay/models/models.dart';
+import 'package:quickplay/pages/TimeSelection.dart';
 import 'package:quickplay/pages/home_Menu.dart';
 
-import 'TimeSelection.dart';
 
 class ClubDetail extends StatefulWidget {
   const ClubDetail({Key key, this.campi, this.circolo, this.data})
@@ -94,7 +94,6 @@ class _ClubDetails extends State<ClubDetail> {
                         getList(),
                         getInfo(),
                       ],
-                      physics: NeverScrollableScrollPhysics(),
                     ),
                 ),
                 )
@@ -157,7 +156,8 @@ class _ClubDetails extends State<ClubDetail> {
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
-                                fontFamily: "sans-serif-medium"
+                                fontFamily: "sans-serif-thin",
+                                fontWeight: FontWeight.w800,
                               ),
                               text: "Campo n°: ",
                               children: [
@@ -182,7 +182,8 @@ class _ClubDetails extends State<ClubDetail> {
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
-                                fontFamily: "sans-serif-medium"
+                                fontFamily: "sans-serif-thin",
+                                fontWeight: FontWeight.w800,
                               ),
                               text: "Superficie : ",
                               children: [
@@ -205,7 +206,8 @@ class _ClubDetails extends State<ClubDetail> {
                             text: TextSpan(
                               style: TextStyle(
                                 color: Colors.black,
-                                fontFamily: "sans-serif-medium",
+                                fontFamily: "sans-serif-thin",
+                                fontWeight: FontWeight.w800,
                                 fontSize: 15,
                               ),
                               text: "Coperto : ",
@@ -219,7 +221,8 @@ class _ClubDetails extends State<ClubDetail> {
                             text: TextSpan(
                               style: TextStyle(
                                 color: Colors.black,
-                                fontFamily: "sans-serif-medium",
+                                fontFamily: "sans-serif-thin",
+                                fontWeight: FontWeight.w800,
                                 fontSize: 15,
                               ),
                               text: "Riscaldamento: ",
@@ -237,7 +240,8 @@ class _ClubDetails extends State<ClubDetail> {
                               style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
-                                fontFamily: "sans-serif-medium"
+                                fontFamily: "sans-serif-thin",
+                                fontWeight: FontWeight.w800,
                               ),
                               text: "Prezzo: ",
                               children: [
@@ -266,7 +270,8 @@ class _ClubDetails extends State<ClubDetail> {
                                   style: TextStyle(
                                       color: Colors.black,
                                       fontSize: 15,
-                                      fontFamily: "sans-serif-medium"
+                                    fontFamily: "sans-serif-thin",
+                                    fontWeight: FontWeight.w800,
                                   ),
                                   text: "Docce: ",
                                   children: [getIcon(circolo.docce)],

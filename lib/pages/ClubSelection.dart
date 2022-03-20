@@ -2,10 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:lottie/lottie.dart' hide Marker;
 import 'package:quickplay/ViewModel/DB_Handler_Clubs.dart';
 import 'package:quickplay/models/models.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:quickplay/pages/ClubDetails.dart';
 import 'package:quickplay/widgets/FilterPopup.dart';
 import 'package:quickplay/widgets/snackbar.dart';
 import 'package:quickplay/widgets/HelpPopup.dart';
@@ -163,8 +163,10 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
 
   }
 
+
   //legge i filtri e chiama il metodo che restituisce i circoli corrispondenti
   void aggiornaFiltri() async {
+
     await Geolocator.isLocationServiceEnabled().then((value) async {
       if (!value) {
         showDialog(context: context, builder: buildGeolocatorAlert1)

@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Reservations.dart';
@@ -23,242 +24,104 @@ class _SelezioneOrario extends State<SelezioneOrario> {
   bool flag = false;
   bool clickFlag = false;
 
+
   String oraInizioSel;
   String oraFineSel;
+  String testo = "Inserisci l'orario di inizio";
 
   _SelezioneOrario(this.campo, this.circolo, this.data);
 
-  List<Prenotazione> prenotazioni= [];
+  List<Prenotazione> prenotazioni = [];
+
+  Future<bool> onBackPressed() {
+    Navigator.pop(context, false);
+  }
 
 
 
-  Map<String,Color> buttonsColour = {
-    '6:30':Colors.red,
-    '7:00':Colors.red,
-    '7:30':Colors.red,
-    '8:00':Colors.red,
-    '8:30':Colors.red,
-    '9:00':Colors.red,
-    '9:30':Colors.red,
-    '10:00':Colors.red,
-    '10:30':Colors.red,
-    '11:00':Colors.red,
-    '11:30':Colors.red,
-    '12:00':Colors.red,
-    '12:30':Colors.red,
-    '13:00':Colors.red,
-    '13:30':Colors.red,
-    '14:00':Colors.red,
-    '14:30':Colors.red,
-    '15:00':Colors.red,
-    '15:30':Colors.red,
-    '16:00':Colors.red,
-    '16:30':Colors.red,
-    '17:00':Colors.red,
-    '17:30':Colors.red,
-    '18:00':Colors.red,
-    '18:30':Colors.red,
-    '19:00':Colors.red,
-    '19:30':Colors.red,
-    '20:00':Colors.red,
-    '20:30':Colors.red,
-    '21:00':Colors.red,
-    '21:30':Colors.red,
-    '22:00':Colors.red,
-    '22:30':Colors.red,
-    '23:00':Colors.red,
-    '23:30':Colors.red,
-    '24:00':Colors.red
+  Map<String, Color> buttonsColour = {
+    '6:30': Colors.red,
+    '7:00': Colors.red,
+    '7:30': Colors.red,
+    '8:00': Colors.red,
+    '8:30': Colors.red,
+    '9:00': Colors.red,
+    '9:30': Colors.red,
+    '10:00': Colors.red,
+    '10:30': Colors.red,
+    '11:00': Colors.red,
+    '11:30': Colors.red,
+    '12:00': Colors.red,
+    '12:30': Colors.red,
+    '13:00': Colors.red,
+    '13:30': Colors.red,
+    '14:00': Colors.red,
+    '14:30': Colors.red,
+    '15:00': Colors.red,
+    '15:30': Colors.red,
+    '16:00': Colors.red,
+    '16:30': Colors.red,
+    '17:00': Colors.red,
+    '17:30': Colors.red,
+    '18:00': Colors.red,
+    '18:30': Colors.red,
+    '19:00': Colors.red,
+    '19:30': Colors.red,
+    '20:00': Colors.red,
+    '20:30': Colors.red,
+    '21:00': Colors.red,
+    '21:30': Colors.red,
+    '22:00': Colors.red,
+    '22:30': Colors.red,
+    '23:00': Colors.red,
+    '23:30': Colors.red,
+    '24:00': Colors.red
   };
 
-  Map<String,bool> buttonsEnabled = {
-  '6:30':false,
-  '7:00':false,
-  '7:30':false,
-  '8:00':false,
-  '8:30':false,
-  '9:00':false,
-  '9:30':false,
-  '10:00':false,
-  '10:30':false,
-  '11:00':false,
-  '11:30':false,
-  '12:00':false,
-  '12:30':false,
-  '13:00':false,
-  '13:30':false,
-  '14:00':false,
-  '14:30':false,
-  '15:00':false,
-  '15:30':false,
-  '16:00':false,
-  '16:30':false,
-  '17:00':false,
-  '17:30':false,
-  '18:00':false,
-  '18:30':false,
-  '19:00':false,
-  '19:30':false,
-  '20:00':false,
-  '20:30':false,
-  '21:00':false,
-  '21:30':false,
-  '22:00':false,
-  '22:30':false,
-  '23:00':false,
-  '23:30':false,
-  '24:00':false
+  Map<String, bool> buttonsEnabled = {
+    '6:30': false,
+    '7:00': false,
+    '7:30': false,
+    '8:00': false,
+    '8:30': false,
+    '9:00': false,
+    '9:30': false,
+    '10:00': false,
+    '10:30': false,
+    '11:00': false,
+    '11:30': false,
+    '12:00': false,
+    '12:30': false,
+    '13:00': false,
+    '13:30': false,
+    '14:00': false,
+    '14:30': false,
+    '15:00': false,
+    '15:30': false,
+    '16:00': false,
+    '16:30': false,
+    '17:00': false,
+    '17:30': false,
+    '18:00': false,
+    '18:30': false,
+    '19:00': false,
+    '19:30': false,
+    '20:00': false,
+    '20:30': false,
+    '21:00': false,
+    '21:30': false,
+    '22:00': false,
+    '22:30': false,
+    '23:00': false,
+    '23:30': false,
+    '24:00': false
   };
 
   @override
   void initState() {
-
     super.initState();
   }
 
-
-  @override
-  Widget build(BuildContext context) {
-
-    if(!flag){
-      initialize();
-    }
-
-    var size = MediaQuery.of(context).size;
-
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height*0.69) / 9;
-    final double itemWidth = size.width / 4;
-
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05 ),
-            color: Colors.white,
-            child: Center(
-              child: Text(
-                "SELEZIONA ORA INIZIO E FINE",
-                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 22,color: Colors.black),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.05),
-            height: MediaQuery.of(context).size.height*0.71,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.white,
-            child: GridView.count(
-                crossAxisCount: 4,
-                childAspectRatio: (itemWidth/itemHeight),
-                padding: const EdgeInsets.all(8.0),
-                mainAxisSpacing: 6.0,
-                crossAxisSpacing: 6.0,
-                children: [
-                  _buildCounterButton('6:30'),
-                  _buildCounterButton('11:00'),
-                  _buildCounterButton('15:30'),
-                  _buildCounterButton('20:00'),
-                  _buildCounterButton('7:00'),
-                  _buildCounterButton('11:30'),
-                  _buildCounterButton('16:00'),
-                  _buildCounterButton('20:30'),
-                  _buildCounterButton('7:30'),
-                  _buildCounterButton('12:00'),
-                  _buildCounterButton('16:30'),
-                  _buildCounterButton('21:00'),
-                  _buildCounterButton('8:00'),
-                  _buildCounterButton('12:30'),
-                  _buildCounterButton('17:00'),
-                  _buildCounterButton('21:30'),
-                  _buildCounterButton('8:30'),
-                  _buildCounterButton('13:00'),
-                  _buildCounterButton('17:30'),
-                  _buildCounterButton('22:00'),
-                  _buildCounterButton('9:00'),
-                  _buildCounterButton('13:30'),
-                  _buildCounterButton('18:00'),
-                  _buildCounterButton('22:30'),
-                  _buildCounterButton('9:30'),
-                  _buildCounterButton('14:00'),
-                  _buildCounterButton('18:30'),
-                  _buildCounterButton('23:00'),
-                  _buildCounterButton('10:00'),
-                  _buildCounterButton('14:30'),
-                  _buildCounterButton('19:00'),
-                  _buildCounterButton('23:30'),
-                  _buildCounterButton('10:30'),
-                  _buildCounterButton('15:00'),
-                  _buildCounterButton('19:30'),
-                  _buildCounterButton('24:00'),
-                ].map((Widget btn) {
-                  return GridTile(
-                      child: btn);
-                }).toList()),
-          ),
-          Container(
-            margin: EdgeInsets.only(left: MediaQuery.of(context).size.width*0.20,right: MediaQuery.of(context).size.width*0.20),
-            padding: EdgeInsets.symmetric(vertical: 25.0),
-            width: double.infinity,
-            child: RaisedButton(
-              elevation: 5.0,
-              onPressed: (){
-                initialize();
-              },
-              padding: EdgeInsets.all(10.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  side: BorderSide(
-                      color: Colors.black26, width: 2.0)),
-              color: Colors.white38,
-              child: Text(
-                'RESETTA',
-                style: TextStyle(
-                  color: Colors.black,
-                  letterSpacing: 1.5,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'OpenSans',
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-
-  }
-
-
-  Widget _buildCounterButton(String btn) {
-    return  SizedBox(
-      height: MediaQuery.of(context).size.height*0.02,
-      width: MediaQuery.of(context).size.width*0.08,
-      child: RaisedButton(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              side: BorderSide(
-                  color: Colors.black26, width: 2.0)),
-          color: buttonsColour[btn],
-          child: Text(
-              btn
-          ),
-          onPressed: (){
-            if(buttonsEnabled[btn]){
-              if(!clickFlag){
-                firstClick(btn);
-              }else{
-                secondClick(btn);
-              }
-            }else{
-              CustomSnackBar(context,const Text("Orario occupato"));
-            }
-
-          }
-      ),
-    );
-  }
 
   // funge anche da reset
   void initialize() {
@@ -421,11 +284,13 @@ class _SelezioneOrario extends State<SelezioneOrario> {
 
   }
 
+
   void firstClick(String btn){
     clickFlag = true;
     oraInizioSel = btn;
     buttonsEnabled["24:00"] = true;
     buttonsColour["24:00"] = Colors.white;
+
 
     String ora;
     String minuti;
@@ -460,6 +325,7 @@ class _SelezioneOrario extends State<SelezioneOrario> {
     }
     buttonsColour[btn] = Colors.cyan;
     buttonsEnabled[btn] = false;
+    testo = "Inserisci l'orario di fine";
 
     setState(() {
 
@@ -508,17 +374,16 @@ class _SelezioneOrario extends State<SelezioneOrario> {
       });
       //Richiesta/Riepilogo e richiesta di conferma
       showAlertDialog(context);
-
     }
-
   }
 
   showAlertDialog(BuildContext context) {
-    // set up the buttons
+
     Widget cancelButton = FlatButton(
       child: Text("Annulla"),
       onPressed:  () {
         Navigator.of(context).pop();
+        testo = "Inserisci l'orario di inizio";
         initialize();
       },
     );
@@ -545,14 +410,29 @@ class _SelezioneOrario extends State<SelezioneOrario> {
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Confermare prenotazione?"),
-      content: Text("Data : "+data.day.toString()+"/"+data.month.toString()+"/"+data.year.toString()+"\nDalle "+oraInizioSel+" alle "+oraFineSel+"\nCircolo : "+circolo.nome+"\nCampo n° : "+campo.n_c.toString()),
+      title: Text("Confermare prenotazione", style: TextStyle(fontFamily: "sans-serif-medium"),),
+      content: RichText(
+        text: TextSpan(
+          text: 'Data: ',
+          style: TextStyle(fontFamily: "sans-serif-thin", fontWeight: FontWeight.w800, color: Colors.black, fontSize: 20),
+          children: [
+            TextSpan(text: data.day.toString()+"/"+data.month.toString()+"/"+data.year.toString(), style: TextStyle(fontFamily: "sans-serif-medium")),
+            TextSpan(text: '\nDalle: '),
+            TextSpan(text: oraInizioSel, style: TextStyle(fontFamily: "sans-serif-medium")),
+            TextSpan(text: ' alle: '),
+            TextSpan(text: oraFineSel, style: TextStyle(fontFamily: "sans-serif-medium")),
+            TextSpan(text: '\nCircolo: '),
+            TextSpan(text: circolo.nome, style: TextStyle(fontFamily: "sans-serif-medium")),
+            TextSpan(text: '\nCampo n°: '),
+            TextSpan(text: campo.n_c.toString(), style: TextStyle(fontFamily: "sans-serif-medium")),
+          ],
+        ),
+      ),
       actions: [
         cancelButton,
         continueButton,
       ],
     );
-    // show the dialog
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -565,103 +445,211 @@ class _SelezioneOrario extends State<SelezioneOrario> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          content: Text("Prenotazione Confermata"),
-          actions: [
-            FlatButton(
-              onPressed: (){
-                Navigator.pop(context, true);
-                Navigator.push(context,MaterialPageRoute(builder: (context)=>HomeMenu()));
-              }, // passing true
-              child: Text('Home'),
-            ),
-          ]
+            content: Text("Prenotazione Confermata", style: TextStyle(fontFamily: "sans-serif-medium", fontSize: 25),),
+            actions: [
+              FlatButton(
+                onPressed: (){
+                  Navigator.pop(context, true);
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>HomeMenu()));
+                }, // passing true
+                child: Text('Home'),
+              ),
+            ]
         )).then((value){
       Navigator.push(context,MaterialPageRoute(builder: (context)=>HomeMenu()));
     });
   }
 
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
+    if(!flag){
+      initialize();
+    }
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: AppBar(backgroundColor: Colors.white,).preferredSize,
+        child: SafeArea(
+          child: PreferredSize(
+              preferredSize: Size.fromHeight(100.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 30,
+                    child: Container(
+                        margin: EdgeInsets.only(
+                          left: 10,
+                          top: 5,
+                        ),
+                        child: IconButton(
+                          color: Colors.black,
+                          icon: Icon(
+                            Icons.arrow_back_ios,
+                          ),
+                          onPressed: onBackPressed,
+                        )),
+                  ),
+                ],
+              )),
+        ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.only(right: 10, left: 10, bottom: 15),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.only(bottom: 5.0),
+                      child: Text(
+                        testo,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: "sans-serif-medium"
+                        ),
+                      )
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: getRow("6:30", "11:00", "15:30", "20:00"),
+            ),
+            Expanded(
+              child: getRow("7:00", "11:30", "16:00", "20:30"),
+            ),
+            Expanded(
+              child: getRow("7:30", "12:00", "16:30", "21:00"),
+            ),
+            Expanded(
+              child: getRow("8:00", "12:30", "17:00", "21:30"),
+            ),
+            Expanded(
+              child: getRow("8:30", "13:00", "17:30", "22:00"),
+            ),
+            Expanded(
+              child: getRow("9:00", "13:30", "18:00", "22:30"),
+            ),
+            Expanded(
+              child: getRow("9:30", "14:00", "18:30", "23:00"),
+            ),
+            Expanded(
+              child: getRow("10:00","14:30", "19:00", "23:30"),
+            ),
+            Expanded(
+              child: getRow("10:30","15:00", "19:30", "24:00"),
+            ),
+
+            Flexible(
+              child: Padding(
+                padding: EdgeInsets.only(top:5),
+                child: Container(
+                  height: (size.height*0.50) / 9,
+                  child: RaisedButton(
+                    elevation: 5.0,
+                    onPressed: (){
+                      initialize();
+                    },
+                    padding: EdgeInsets.all(10.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: BorderSide(
+                            color: Colors.black26, width: 1.0)),
+                    color: Colors.white24,
+                    child: Text(
+                      'Resetta',
+                      style: TextStyle(
+                        color: Colors.black,
+                        letterSpacing: 1.5,
+                        fontSize: 15.0,
+                        fontFamily: 'sans-serif-medium',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+      )
+    );
+
+  }
+
+  getRow(String btn1, btn2, btn3, btn4)
+  {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(right: 7.0),
+            child: getButton(btn1),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(right: 3.0, left: 4.0),
+            child: getButton(btn2),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(left: 7.0),
+            child: getButton(btn3),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            margin: EdgeInsets.only(left: 7.0),
+            child: getButton(btn4),
+          ),
+        ),
+      ],
+    );
+  }
+
+  getButton(String btn)
+  {
+    var size = MediaQuery.of(context).size;
+
+    return SizedBox(
+      height: (size.height*0.50) / 9,
+        child: RaisedButton(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(17.0),
+                side: BorderSide(
+                    color: Colors.black26, width: 2.0)),
+            color: buttonsColour[btn],
+            child: Text(
+              btn,
+              style: TextStyle(
+                  fontSize: 17,
+                  fontFamily: "sans-serif-medium"
+              ),
+            ),
+            onPressed: (){
+              if(buttonsEnabled[btn]){
+                if(!clickFlag){
+                  firstClick(btn);
+                }else{
+                  secondClick(btn);
+                }
+              }else{
+                CustomSnackBar(context,const Text("Orario occupato"));
+              }
+
+            }
+        ),
+    );
+
+
+  }
+
+
 }
-
-
-/*
-
-Row(
-           children: [
-             _buildCounterButton('6:30'),
-             _buildCounterButton('11:00'),
-             _buildCounterButton('15:30'),
-             _buildCounterButton('20:00'),
-           ],
-         ),
-         Row(
-           children: [
-             _buildCounterButton('7:00'),
-             _buildCounterButton('11:30'),
-             _buildCounterButton('16:00'),
-             _buildCounterButton('20:30'),
-           ],
-         ),
-         Row(
-           children: [
-             _buildCounterButton('7:30'),
-             _buildCounterButton('12:00'),
-             _buildCounterButton('16:30'),
-             _buildCounterButton('21:00'),
-           ],
-         ),
-         Row(
-           children: [
-             _buildCounterButton('8:00'),
-             _buildCounterButton('12:30'),
-             _buildCounterButton('17:00'),
-             _buildCounterButton('21:30'),
-           ],
-         ),
-         Row(
-           children: [
-             _buildCounterButton('8:30'),
-             _buildCounterButton('13:00'),
-             _buildCounterButton('17:30'),
-             _buildCounterButton('22:00'),
-
-           ],
-         ),Row(
-           children: [
-             _buildCounterButton('9:00'),
-             _buildCounterButton('13:30'),
-             _buildCounterButton('18:00'),
-             _buildCounterButton('22:30'),
-           ],
-         ),Row(
-           children: [
-             _buildCounterButton('9:30'),
-             _buildCounterButton('14:00'),
-             _buildCounterButton('18:30'),
-             _buildCounterButton('23:00'),
-           ],
-         ),Row(
-           children: [
-             _buildCounterButton('10:00'),
-             _buildCounterButton('14:30'),
-             _buildCounterButton('19:00'),
-             _buildCounterButton('23:30'),
-           ],
-         ),Row(
-           children: [
-             _buildCounterButton('10:30'),
-             _buildCounterButton('15:00'),
-             _buildCounterButton('19:30'),
-             _buildCounterButton('24:00'),
-           ],
-         ),
-
-
-
-
-
-
-
-
-
-
- */
