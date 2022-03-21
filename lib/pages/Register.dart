@@ -310,6 +310,22 @@ class _RegisterScreenState extends State<Register> {
   }
 
 
+  Widget _buildCircoliBtn() {
+    return Container(
+      alignment: Alignment.centerLeft,
+      child: FlatButton(
+        onPressed: () {
+          print("coiaooo");
+        },
+        child: Text(
+          'Sei un gestore? Lavora con noi',
+          style: kLabelStyle,
+
+        ),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -426,6 +442,7 @@ class _RegisterScreenState extends State<Register> {
                             SizedBox(height: 10.0),
                           ])),
                       _buildRegisterBtn(),
+                      _buildCircoliBtn(),
                     ],
                   ),
                 ),
