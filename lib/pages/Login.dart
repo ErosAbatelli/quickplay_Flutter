@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
           _displayTextInputDialog(context);
         },
         child: Text(
-          'Password dimenticata?',
+          'Password bella?',
           style: kLabelStyle,
         ),
       ),
