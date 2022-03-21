@@ -5,20 +5,21 @@ import 'package:quickplay/ViewModel/Auth_Handler.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Reservations.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Users.dart';
 import 'package:quickplay/models/models.dart';
+import 'package:quickplay/pages/QrCode/QrCode_scan.dart';
 import 'package:quickplay/utils/dialog_helper.dart';
 import 'package:quickplay/utils/drawerMenu/drawerMenu/itemDrawerMenu.dart';
 import 'package:quickplay/utils/drawerMenu/flutter_advanced_drawer.dart';
 
 
 
-class HomeMenu extends StatefulWidget {
+class HomeMenuClub extends StatefulWidget {
 
 
   @override
   _HomeMenuState createState() => _HomeMenuState();
 }
 
-class _HomeMenuState extends State<HomeMenu> {
+class _HomeMenuState extends State<HomeMenuClub> {
   final _advancedDrawerController = AdvancedDrawerController();
   int _selectedIndex = -1;
 
@@ -138,18 +139,18 @@ class _HomeMenuState extends State<HomeMenu> {
                                                     0, 136, 255, 1),
                                               ),
                                               children: [
-                                                TextSpan(
-                                                  text: Auth_Handler.CURRENT_USER.nome
-                                                      .capitalize() +
-                                                      " " +
-                                                      Auth_Handler
-                                                          .CURRENT_USER.cognome
-                                                          .capitalize(),
-                                                  style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.black),
-                                                )
+                                                // TextSpan(
+                                                //   text: Auth_Handler.CURRENT_USER.nome
+                                                //       .capitalize() +
+                                                //       " " +
+                                                //       Auth_Handler
+                                                //           .CURRENT_USER.cognome
+                                                //           .capitalize(),
+                                                //   style: TextStyle(
+                                                //       fontSize: 24,
+                                                //       fontWeight: FontWeight.bold,
+                                                //       color: Colors.black),
+                                                // )
                                               ])),
                                     ],
                                   ),
@@ -205,7 +206,7 @@ class _HomeMenuState extends State<HomeMenu> {
       Color color, IconData icon) {
     return Padding(
       padding: EdgeInsets.only(
-          left: isEven ? 10 : 20, right: isEven ? 20 : 10, top: 10, bottom: 10),
+          left: isEven ? 10 : 20, right: isEven ? 20 : 15, top: 10, bottom: 10),
       child: Container(
         width: MediaQuery.of(context).size.width,
         child: GestureDetector(
@@ -213,10 +214,11 @@ class _HomeMenuState extends State<HomeMenu> {
             _selectedIndex = index;
 
             /**
-             * CREA PRENOTAZIONE
+             * Scannerizza QR CODE
              */
             if (_selectedIndex == 0) {
-
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => QRScanPage()));
             }
 
             /**
