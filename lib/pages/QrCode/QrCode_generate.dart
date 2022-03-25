@@ -6,23 +6,20 @@ import 'package:quickplay/pages/ReservationList.dart';
 
 class QRCreatePage extends StatefulWidget {
   String codice;
-  Map<String, dynamic> map;
   final List<LayoutInfo> layoutInfo;
 
-  QRCreatePage(this.map, this.layoutInfo, {Key key}) : super(key: key);
+  QRCreatePage(this.codice, this.layoutInfo, {Key key}) : super(key: key);
 
   @override
-  _QRCreatePageState createState() => _QRCreatePageState(map, layoutInfo);
+  _QRCreatePageState createState() => _QRCreatePageState(codice, layoutInfo);
 }
 
 class _QRCreatePageState extends State<QRCreatePage>
 {
   String codice;
-  Map<String, dynamic> map;
   List<LayoutInfo> layoutInfo = [];
-  bool timeCountdown;
 
-  _QRCreatePageState(this.map, this.layoutInfo);
+  _QRCreatePageState(this.codice, this.layoutInfo);
 
   final controller = TextEditingController();
 
@@ -68,14 +65,9 @@ class _QRCreatePageState extends State<QRCreatePage>
 
 
   getQRCODE(){
-    map.values.forEach((v)
-    {
-      timeCountdown = v;
-      print(timeCountdown);
-    });
 
-    if(timeCountdown == false)
-      {
+    //if(codice == true)
+      //{
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +93,7 @@ class _QRCreatePageState extends State<QRCreatePage>
                   child: BarcodeWidget(
                     barcode: Barcode.qrCode(),
                     color: Colors.black,
-                    data: "$codice",
+                    data: codice,
                     width: 200,
                     height: 200,
                   ),
@@ -115,7 +107,7 @@ class _QRCreatePageState extends State<QRCreatePage>
           ),
         );
       }
-    else{
+    /*else{
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -156,7 +148,9 @@ class _QRCreatePageState extends State<QRCreatePage>
         ),
       );
     }
-  }
+
+     */
+  //}
 
 
   Future<bool> onBackPressed() {

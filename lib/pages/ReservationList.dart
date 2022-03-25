@@ -31,12 +31,9 @@ enum GroupType {
 
 class _ListState extends State<VisualizzaPrenotazioni> {
   var _direction = Axis.vertical;
-  bool timeCountdown;
   double _itemExtend;
 
   List<LayoutInfo> layoutInfo = [];
-  Map<String, dynamic> map;
-
 
   _ListState(List<LayoutInfo> prenotazioni) {
     layoutInfo = prenotazioni;
@@ -348,9 +345,6 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
   Color getColor(LayoutInfo pren) {
 
-    map = { pren.codice: timeCountdown, };
-
-
     var giornoSplit = pren.data.split("-");
     String giornoFormatoAmericano = giornoSplit[2] + "-" + giornoSplit[1] + "-" + giornoSplit[0];
 
@@ -359,33 +353,11 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
     if (tsFine < tsNow)
     {
-      //Se quindi è scaduta parte il timer (timeCountdown = true;)
-      timeCountdown = true;
-      map.putIfAbsent(pren.codice, () => timeCountdown);
 
-      var splitOra = pren.oraFine.split(":");
-      int oraInteger = int.parse(splitOra[0]);
-      int scadenza = oraInteger + 2;
-
-
-      if(oraInteger <= 21 )
-        {
-          print("Scadenza alle:" + scadenza.toString());
-          if(scadenza >= (oraInteger + 2) )
-            {
-              print(map);
-            }
-
-        }
 
       return Color.fromRGBO(255, 102, 102, 0.8);
     }
     else{
-        timeCountdown = false;
-        map.putIfAbsent(pren.codice, () => timeCountdown);
-        print(map);
-
-
         _itemExtend = MediaQuery.of(context).size.height * 0.32;
         return Colors.white;
     }
@@ -443,8 +415,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          print(map);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => QRCreatePage(this.map, layoutInfo)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
                         },
                         child: const Text(
                             'QR CODE',
@@ -459,7 +430,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => QRCreatePage(map, layoutInfo)));
+                            MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
                       },
                     ),
                   ],
@@ -498,7 +469,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
                     TextButton(
                         onPressed: () {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => QRCreatePage(map, layoutInfo)));
+                              MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
                         },
                         child: const Text(
                             'QR CODE',
@@ -513,7 +484,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => QRCreatePage(map, layoutInfo)));
+                            MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
                       },
                     ),
                   ],
