@@ -350,15 +350,6 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
     map = { pren.codice: timeCountdown, };
 
-    map.keys.forEach((k) {
-      print(k);
-    });
-    map.values.forEach((v) {
-      print(v);
-    });
-
-
-
 
     var giornoSplit = pren.data.split("-");
     String giornoFormatoAmericano = giornoSplit[2] + "-" + giornoSplit[1] + "-" + giornoSplit[0];
@@ -370,6 +361,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
     {
       //Se quindi è scaduta parte il timer (timeCountdown = true;)
       timeCountdown = true;
+      map.putIfAbsent(pren.codice, () => timeCountdown);
 
       var splitOra = pren.oraFine.split(":");
       int oraInteger = int.parse(splitOra[0]);
@@ -381,7 +373,6 @@ class _ListState extends State<VisualizzaPrenotazioni> {
           print("Scadenza alle:" + scadenza.toString());
           if(scadenza >= (oraInteger + 2) )
             {
-              map.update(pren.codice, (value) => timeCountdown);
               print(map);
             }
 
@@ -391,7 +382,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
     }
     else{
         timeCountdown = false;
-        map.update(pren.codice, (value) => timeCountdown);
+        map.putIfAbsent(pren.codice, () => timeCountdown);
         print(map);
 
 
@@ -453,7 +444,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
                     TextButton(
                         onPressed: () {
                           print(map);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => QRCreatePage(map, layoutInfo)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => QRCreatePage(this.map, layoutInfo)));
                         },
                         child: const Text(
                             'QR CODE',
