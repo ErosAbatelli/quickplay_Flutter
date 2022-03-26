@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:intl/intl.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:quickplay/models/models.dart';
@@ -6,23 +7,26 @@ import 'package:quickplay/pages/ReservationList.dart';
 
 class QRCreatePage extends StatefulWidget {
   String codice;
-  final List<LayoutInfo> layoutInfo;
+  String oraFine;
+  String data;
+  List<LayoutInfo> layoutInfo = [];
 
-  QRCreatePage(this.codice, this.layoutInfo, {Key key}) : super(key: key);
+  QRCreatePage(this.codice, this.layoutInfo, this.oraFine, this.data, {Key key}) : super(key: key);
 
   @override
-  _QRCreatePageState createState() => _QRCreatePageState(codice, layoutInfo);
+  _QRCreatePageState createState() => _QRCreatePageState(codice, layoutInfo, oraFine, data);
 }
 
 class _QRCreatePageState extends State<QRCreatePage>
 {
+  String data;
+  String oraFine;
   String codice;
   List<LayoutInfo> layoutInfo = [];
 
-  _QRCreatePageState(this.codice, this.layoutInfo);
+  _QRCreatePageState(this.codice, this.layoutInfo, this.oraFine, this.data);
 
   final controller = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) => WillPopScope(
@@ -63,11 +67,30 @@ class _QRCreatePageState extends State<QRCreatePage>
     ),
     );
 
+  getQRCODE() {
+    print("codice: " + codice);
+    print("ora fine: " + oraFine);
+    print("data: " + data);
 
-  getQRCODE(){
+    var ora_fine = oraFine.split(":");
 
-    //if(codice == true)
-      //{
+    var ora = int.parse(ora_fine[0]);
+    var min = int.parse(ora_fine[1]);
+
+    DateTime oggi = DateTime.now();
+    String formattedDateToday = DateFormat('dd-MM-yyyy').format(oggi);
+    String prelevoOraOggi = DateFormat('kk').format(oggi);
+    String prelevoMinOggi = DateFormat('mm').format(oggi);
+
+    var oraScadenza = int.parse(prelevoOraOggi);
+    var minScadenza = int.parse(prelevoMinOggi);
+    oraScadenza += 2;
+
+
+    print(formattedDateToday);
+
+    if(formattedDateToday.compareTo(data) < 0)
+      {
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -107,50 +130,15 @@ class _QRCreatePageState extends State<QRCreatePage>
           ),
         );
       }
-    /*else{
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Container(
-                child: Text("PRENOTAZIONE SCADUTA",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "sans-serif-thin",
-                    fontSize: 30,
-                  ),
-                ),
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(24),
-              ),
-            ),
-            Expanded(
-              flex: 8,
-              child: Container(
-                alignment: Alignment.center,
-                child: Text("Il tempo limite per confermare la presenza nel circolo è di: 2 ore!",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "sans-serif-thin",
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Container(),
-            ),
-          ],
-        ),
-      );
+    else if(formattedDateToday.compareTo(data) > 0){
+      return getBody();
+    }
+    else if(formattedDateToday.compareTo(data) == 0 && (ora < oraScadenza)) {
+      return getBody();
     }
 
-     */
-  //}
+
+  }
 
 
   Future<bool> onBackPressed() {
@@ -160,6 +148,49 @@ class _QRCreatePageState extends State<QRCreatePage>
         return VisualizzaPrenotazioni(layoutInfo);
       },
     ), (route) => false);
+  }
+
+  Widget getBody() {
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: Container(
+              child: Text("PRENOTAZIONE SCADUTA",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "sans-serif-thin",
+                  fontSize: 30,
+                ),
+              ),
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(24),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Padding(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: Container(
+                alignment: Alignment.center,
+                child: Text("Il tempo limite per confermare la presenza nel circolo è di 3 ore!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: "sans-serif-thin",
+                    fontSize: 17,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Container(),
+          ),
+        ],
+    );
   }
 
 }

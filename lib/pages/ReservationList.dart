@@ -415,7 +415,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo, pren.oraFine, pren.data)));
                         },
                         child: const Text(
                             'QR CODE',
@@ -430,7 +430,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
+                            MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo, pren.oraFine, pren.data)));
                       },
                     ),
                   ],
@@ -469,7 +469,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
                     TextButton(
                         onPressed: () {
                           Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
+                              MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo, pren.oraFine, pren.data)));
                         },
                         child: const Text(
                             'QR CODE',
@@ -484,7 +484,7 @@ class _ListState extends State<VisualizzaPrenotazioni> {
 
                       onPressed: () {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo)));
+                            MaterialPageRoute(builder: (context) => QRCreatePage(pren.codice, layoutInfo, pren.oraFine, pren.data)));
                       },
                     ),
                   ],
