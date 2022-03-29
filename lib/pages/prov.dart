@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:quickplay/ViewModel/DB_Handler_Clubs.dart';
 
 import 'package:quickplay/pages/Register.dart';
 import 'package:map_picker/map_picker.dart';
@@ -18,11 +19,13 @@ class FormCircoli extends StatefulWidget {
 
 class _RegisterScreenState extends State<FormCircoli> {
   GoogleMapController mapController; //contrller for Google map
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+
   CameraPosition cameraPosition;
   MapPickerController mapPickerController = MapPickerController();
+
+
+
+
 
   final FocusNode focusNodePassword = FocusNode();
   final FocusNode focusNodeConfirmPassword = FocusNode();
@@ -36,7 +39,11 @@ class _RegisterScreenState extends State<FormCircoli> {
   TextEditingController signupEmailController = TextEditingController();
   TextEditingController signupNameController = TextEditingController();
   TextEditingController signupConfirmTelController = TextEditingController();
-  Position initialPos = Position(longitude: 45.586751779797915, latitude: 13.51659500105265);
+  Position initialPos = Position(longitude: 43.586751779797915, latitude: 13.51659500105265);
+
+
+
+
 
   getPos() async {
     await Geolocator.isLocationServiceEnabled().then((value) async {
@@ -94,7 +101,6 @@ class _RegisterScreenState extends State<FormCircoli> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
           child: TextField(
             focusNode: focusNodeName,
             controller: signupNameController,
@@ -128,7 +134,6 @@ class _RegisterScreenState extends State<FormCircoli> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
-          height: 60.0,
           child: TextField(
             focusNode: focusNodeEmail,
             controller: signupEmailController,
@@ -161,8 +166,7 @@ class _RegisterScreenState extends State<FormCircoli> {
       children: <Widget>[
         Container(
           alignment: Alignment.centerLeft,
-          decoration: kBoxDecorationStyle,
-          height: MediaQuery.of(context).size.height*0.1,
+          //decoration: kBoxDecorationStyle,
           child: TextField(
             focusNode: focusNodeTel,
             controller: signupConfirmTelController,
@@ -194,7 +198,13 @@ class _RegisterScreenState extends State<FormCircoli> {
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () {
-          _toggleSignUpButton();
+          DB_Handler_Clubs.newRequest(
+              signupNameController.text,
+              signupEmailController.text,
+              signupConfirmTelController.text,
+              initialPos.latitude,
+              initialPos.longitude);
+          CustomSnackBar(context, const Text('Richiesta inviata'));
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
@@ -219,6 +229,7 @@ class _RegisterScreenState extends State<FormCircoli> {
 
   @override
   Widget build(BuildContext context) {
+
     if(initialPos != null){
 
       cameraPosition = CameraPosition(target: LatLng(initialPos.latitude,initialPos.longitude));
@@ -254,67 +265,61 @@ class _RegisterScreenState extends State<FormCircoli> {
       ),
       body: Column(
         children: [
-          _buildNome(),
-          Container(
-            width: 300.0,
-            height: 1.0,
-            color: Colors.grey[400],
-          ),
-          _buildEmail(),
-          Container(
-            width: 300.0,
-            height: 1.0,
-            color: Colors.grey[400],
-          ),
-          _buildCellulare(),
-            Container(
-              height: MediaQuery.of(context).size.height*0.4,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.red,
-              child: MapPicker(
-                // pass icon widget
-                iconWidget: Icon(
-                  Icons.add_location_alt,
-                  color: Colors.pink,
-                  size: 40.0,
-                  semanticLabel: 'Text to announce in accessibility modes',
-                ),
-                //add map picker controller
-                mapPickerController: mapPickerController,
-                child: GoogleMap(
-                  myLocationEnabled: false,
-                  zoomControlsEnabled: true,
-                  // hide location button
-                  myLocationButtonEnabled: false,
-                  mapType: MapType.normal,
-                  //  camera position
-                  initialCameraPosition: cameraPosition,
-                  onMapCreated: _onMapCreated,
-                  onCameraIdle: () async {
-                    // notify map stopped moving
-                    mapPickerController.mapFinishedMoving();
-                    //get address name from camera position
-                    List<Placemark> placemarks = await placemarkFromCoordinates(
-                      cameraPosition.target.latitude,
-                      cameraPosition.target.longitude,
-                    );
-                  },
-                ),
-              ),
+          Expanded(
+            flex: 2,
+            child: Column(
+              children: [
+                _buildNome(),
+                _buildEmail(),
+                _buildCellulare()
+              ],
             ),
-            _buildRegisterBtn()
+          ),
+            Expanded(
+              flex: 5,
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                  child:MapPicker(
+                    iconWidget: Icon(
+                      Icons.add_location_alt,
+                      color: Colors.pink,
+                      size: 40.0,
+                      semanticLabel: 'Text to announce in accessibility modes',
+                    ),
+                    //add map picker controller
+                    mapPickerController: mapPickerController,
+                    child: GoogleMap(
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(initialPos.latitude, initialPos.longitude),
+                        zoom: 5,
+                      ),
+                      onCameraMove: ((_position) => updateLocation(_position)),
+                      onMapCreated: (GoogleMapController controller) {
+                        mapController = controller;
+                      },
+                    ),
+                  ),
+
+              )
+            ),
+          Expanded(
+            flex: 1,
+            child: _buildRegisterBtn(),
+          ),
+
         ],
       ),
     );
   }
 
-  void _toggleSignUpButton() {
-    if(signupNameController.text == "" || signupEmailController.text == "" ||
-        signupConfirmTelController.text == "")
-    {
-      CustomSnackBar(context, const Text('Inserisci le credenziali'));
-    }
+  void updateLocation(CameraPosition _position) {
+    Position newMarkerPosition = Position(
+        latitude: _position.target.latitude,
+        longitude: _position.target.longitude);
+    initialPos = Position(latitude: _position.target.latitude, longitude: _position.target.longitude);
   }
+
 
 
 }

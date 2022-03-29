@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -28,6 +30,16 @@ class DB_Handler_Clubs{
           lng));
     });
     return clubs;
+  }
+
+  static newRequest(String nomeC, String email, String telC,double lat, double lng,){
+    var location = GeoPoint(lat, lng);
+    myRef.collection("richieste_circoli").document(email).setData({
+      'email':email,
+      'nome':nomeC.toLowerCase(),
+      'posizione':location,
+      'telefono' : telC
+    });
   }
 
   static Future<List<Club>> getAllClubsInRange(int range,LatLng position) async{
