@@ -191,20 +191,39 @@ class _RegisterScreenState extends State<FormCircoli> {
     );
   }
 
-  Widget _buildRegisterBtn() {
-    return Container(
+    String pattern =
+        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+        r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+        r"{0,253}[a-zA-Z0-9])?)*$";
+
+    Widget _buildRegisterBtn() {
+      RegExp regex = RegExp(pattern);
+
+      return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: MediaQuery.of(context).size.width*0.7,
       child: RaisedButton(
         elevation: 5.0,
         onPressed: () {
-          DB_Handler_Clubs.newRequest(
-              signupNameController.text,
-              signupEmailController.text,
-              signupConfirmTelController.text,
-              initialPos.latitude,
-              initialPos.longitude);
-          CustomSnackBar(context, const Text('Richiesta inviata'));
+          if(signupNameController.text.isEmpty || signupEmailController.text.isEmpty || signupConfirmTelController.text.isEmpty){
+            CustomSnackBar(context, const Text('Inserire tutti i campi'));
+          }else{
+            if(!regex.hasMatch(signupEmailController.text)){
+              CustomSnackBar(context, const Text("Ricontrollare l'email"));
+            }else{
+              if(signupConfirmTelController.text.length==10){
+                DB_Handler_Clubs.newRequest(
+                signupNameController.text,
+                signupEmailController.text,
+                signupConfirmTelController.text,
+                initialPos.latitude,
+                initialPos.longitude);
+                CustomSnackBar(context, const Text('Richiesta inviata'));
+              }else{
+                CustomSnackBar(context, const Text('Ricontrollare il numero di telefono'));
+              }
+            }
+          }
         },
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
