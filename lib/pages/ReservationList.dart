@@ -1,8 +1,5 @@
 import 'dart:async';
-import 'dart:collection';
-import 'dart:ffi';
 import 'dart:ui';
-
 import 'package:clipboard_manager/clipboard_manager.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";

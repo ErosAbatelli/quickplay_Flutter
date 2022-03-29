@@ -27,18 +27,20 @@ dependencies:
   shared_preferences: ^2.0.6
   image_picker: ^0.8.3
 
-
   dio: ^4.0.0
   flutter_polyline_points: ^0.2.6
-  google_maps_flutter: ^2.1.1
-  geocoding: ^2.0.1
+  google_maps_flutter: ^2.0.2
+
   clipboard_manager: ^0.0.4
   flutter_barcode_scanner: ^2.0.0
   barcode_widget: ^1.5.0
   lottie: ^0.6.0
   geolocator: ^8.0.5
   flutter_placeholder_textlines: ^1.1.2
+  sliding_up_panel: ^2.0.0+1
   map_picker: ^0.0.3
+  geocoding: ^2.0.1
+
 
 
 
