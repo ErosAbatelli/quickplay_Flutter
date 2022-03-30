@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -7,7 +9,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:quickplay/pages/Register.dart';
 import 'package:map_picker/map_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../utils/constants.dart';
 import '../widgets/snackbar.dart';
 import '../pages/ClubSelection.dart';
@@ -191,20 +192,14 @@ class _RegisterScreenState extends State<FormCircoli> {
     );
   }
 
-    String pattern =
-        r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-        r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
-        r"{0,253}[a-zA-Z0-9])?)*$";
-
     Widget _buildRegisterBtn() {
-      RegExp regex = RegExp(pattern);
 
       return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: MediaQuery.of(context).size.width*0.7,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () {
+        onPressed: () async {
           if(signupNameController.text.isEmpty || signupEmailController.text.isEmpty || signupConfirmTelController.text.isEmpty){
             CustomSnackBar(context, const Text('Inserire tutti i campi'));
           }else{
@@ -214,14 +209,26 @@ class _RegisterScreenState extends State<FormCircoli> {
             }else{
               String telSafe = signupConfirmTelController.text.replaceAll(" ", "");
               if(signupConfirmTelController.text.length==10){
-                DB_Handler_Clubs.newRequest(
-                  signupNameController.text,
-                  emailSafe,
-                  telSafe,
-                  initialPos.latitude,
-                  initialPos.longitude
-                );
-                CustomSnackBar(context, const Text('Richiesta inviata'));
+                bool result = await InternetConnectionChecker().hasConnection;
+                if(result == true) {
+                  showLoaderDialog(context);
+                  bool esito = await DB_Handler_Clubs.newRequest(
+                      signupNameController.text,
+                      emailSafe,
+                      telSafe,
+                      initialPos.latitude,
+                      initialPos.longitude
+                  );
+
+                  Navigator.pop(context);
+                  if(esito){
+                    showAlertDialog(context);
+                  }else{
+                    CustomSnackBar(context, const Text("Errore nell'invio della richiesta"));
+                  }
+                } else {
+                  CustomSnackBar(context, const Text('Connessione ad internet assente'));
+                }
               }else{
                 CustomSnackBar(context, const Text('Ricontrollare il numero di telefono'));
               }
@@ -332,6 +339,53 @@ class _RegisterScreenState extends State<FormCircoli> {
 
         ],
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Operazione conclusa"),
+      content: Text("Richiesta inviata con successo."),
+      actions: [
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+
+  showLoaderDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+      content: new Row(
+        children: [
+          CircularProgressIndicator(),
+          Container(
+              margin: EdgeInsets.only(left: 7),
+              child: Text("Inviando la richiesta...")),
+        ],
+      ),
+    );
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 

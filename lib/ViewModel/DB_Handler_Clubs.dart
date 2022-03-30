@@ -1,8 +1,6 @@
 
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:quickplay/models/models.dart';
 import 'package:geolocator/geolocator.dart';
@@ -32,14 +30,20 @@ class DB_Handler_Clubs{
     return clubs;
   }
 
-  static newRequest(String nomeC, String email, String telC,double lat, double lng,){
+  static Future<bool> newRequest(String nomeC, String email, String telC,double lat, double lng,) async {
     var location = GeoPoint(lat, lng);
-    myRef.collection("richieste_circoli").document(email).setData({
-      'email':email,
-      'nome':nomeC.toLowerCase(),
-      'posizione':location,
-      'telefono' : telC
-    });
+    bool returnValue = true;
+    try{
+      await myRef.collection("richieste_circoli").document(email).setData({
+        'email':email,
+        'nome':nomeC.toLowerCase(),
+        'posizione':location,
+        'telefono' : telC
+      });
+    }catch (e) {
+      returnValue = false;
+    }
+    return returnValue;
   }
 
   static Future<List<Club>> getAllClubsInRange(int range,LatLng position) async{
