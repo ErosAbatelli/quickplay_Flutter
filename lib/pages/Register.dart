@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quickplay/ViewModel/Auth_Handler.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Users.dart';
-import 'package:quickplay/pages/prov.dart';
+import 'package:quickplay/pages_club/FormCircoli.dart';
 import 'package:quickplay/utils/constants.dart';
 import 'package:quickplay/widgets/snackbar.dart';
 import 'Login.dart';
@@ -318,9 +320,15 @@ class _RegisterScreenState extends State<Register> {
         onPressed: () => Navigator.push(
             context, MaterialPageRoute(builder: (context) => FormCircoli())),
         child: Text(
-          'Sei un gestore? Lavora con noi',
-          style: kLabelStyle,
-
+          'Sei un gestore?  Lavora con noi',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            decoration: TextDecoration.underline,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            fontFamily: 'OpenSans',
+          ),
         ),
       ),
     );

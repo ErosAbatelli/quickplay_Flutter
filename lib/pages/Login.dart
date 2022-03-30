@@ -42,6 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     Geolocator.requestPermission();
+    
     super.initState();
     check();
     opacity = 0.01;
@@ -68,16 +69,18 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextField(
+
             focusNode: focusNodeEmail,
             controller: loginEmailController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
+              fontSize: 15,
               color: Colors.black,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
+              contentPadding: EdgeInsets.only(top: 14.0,right: 20.0),
               prefixIcon: Icon(
                 Icons.email,
                 color: Colors.black,
@@ -183,7 +186,12 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           Text(
             'Ricordami',
-            style: kLabelStyle,
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              fontFamily: 'OpenSans'
+            )
           ),
         ],
       ),

@@ -10,7 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../utils/constants.dart';
 import '../widgets/snackbar.dart';
-import 'ClubSelection.dart';
+import '../pages/ClubSelection.dart';
 
 class FormCircoli extends StatefulWidget {
   @override
@@ -341,7 +341,6 @@ class _RegisterScreenState extends State<FormCircoli> {
         longitude: _position.target.longitude);
     initialPos = Position(latitude: _position.target.latitude, longitude: _position.target.longitude);
   }
-
 
 
 }

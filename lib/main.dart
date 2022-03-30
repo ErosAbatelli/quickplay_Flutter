@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:quickplay/pages/Login.dart';
-import 'package:quickplay/pages_club/Home_Menu_Club.dart';
+import 'package:quickplay/pages/home_Menu.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,4 +32,7 @@ class MyApp extends StatelessWidget {
       home: LoginScreen(),
     );
   }
+
+
+
 }
