@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:ff_navigation_bar/ff_navigation_bar.dart';
+import 'package:ff_navigation_bar/ff_navigation_bar_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quickplay/models/models.dart';
@@ -19,14 +21,16 @@ class ClubDetail extends StatefulWidget {
 }
 
 class _ClubDetails extends State<ClubDetail> {
+  _ClubDetails(this.campi, this.circolo, this.data);
+
   List<Court> campi = [];
   Club circolo;
   DateTime data;
   bool auth = false;
   int pageIndex = 0;
   PageController pageController;
+  int selectedIndex = 0;
 
-  _ClubDetails(this.campi, this.circolo, this.data);
 
   Future<bool> onBackPressed() {
     Navigator.pop(context, false);
@@ -99,23 +103,34 @@ class _ClubDetails extends State<ClubDetail> {
                 )
               ],
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: this.pageIndex,
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Theme.of(context).primaryColor,
-              onTap: (index) {
+            bottomNavigationBar: FFNavigationBar(
+              theme: FFNavigationBarTheme(
+                barBackgroundColor: Colors.white,
+                selectedItemBackgroundColor: Colors.green,
+                selectedItemIconColor: Colors.white,
+                selectedItemLabelColor: Colors.black,
+              ),
+              selectedIndex: selectedIndex,
+              onSelectTab: (index) {
+                pageController.animateToPage(index, duration: Duration(milliseconds: 450), curve: Curves.decelerate);
                 setState(() {
-                  this.pageIndex = index;
+                  selectedIndex = index;
                 });
-                pageController.animateToPage(index, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
               },
               items: [
-                BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Campi'),
-                BottomNavigationBarItem(icon: Icon(Icons.perm_device_info), label: 'Info Club'),
+                FFNavigationBarItem(
+                  iconData: Icons.home_rounded,
+                  label: 'Campi',
+                  selectedBackgroundColor: Colors.orange,
+                ),
+                FFNavigationBarItem(
+                  iconData: Icons.perm_device_info,
+                  label: 'Info Club',
+                ),
               ],
             ),
           ),
-      );
+          );
   }
 
   getList(){
