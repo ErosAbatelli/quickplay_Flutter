@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Clubs.dart';
-
+import 'package:email_validator/email_validator.dart';
 import 'package:quickplay/pages/Register.dart';
 import 'package:map_picker/map_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -208,10 +208,10 @@ class _RegisterScreenState extends State<FormCircoli> {
           if(signupNameController.text.isEmpty || signupEmailController.text.isEmpty || signupConfirmTelController.text.isEmpty){
             CustomSnackBar(context, const Text('Inserire tutti i campi'));
           }else{
-            if(!regex.hasMatch(signupEmailController.text)){
+            String emailSafe = signupEmailController.text.replaceAll(" ","");
+            if(!EmailValidator.validate(emailSafe)){
               CustomSnackBar(context, const Text("Ricontrollare l'email"));
             }else{
-              String emailSafe = signupEmailController.text.replaceAll(" ","");
               String telSafe = signupConfirmTelController.text.replaceAll(" ", "");
               if(signupConfirmTelController.text.length==10){
                 DB_Handler_Clubs.newRequest(

@@ -30,7 +30,7 @@ dependencies:
   dio: ^4.0.0
   flutter_polyline_points: ^0.2.6
   google_maps_flutter: ^2.0.2
-
+  email_validator: '^1.0.6'
   clipboard_manager: ^0.0.4
   flutter_barcode_scanner: ^2.0.0
   barcode_widget: ^1.5.0

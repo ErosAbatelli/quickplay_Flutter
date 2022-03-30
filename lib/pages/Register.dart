@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -528,21 +529,25 @@ class _RegisterScreenState extends State<Register> {
     {
       CustomSnackBar(context, const Text('Le password non combaciano'));
     } else {
-      if(signupConfirmTelController.text.length==10){
-        String emailSafe = signupEmailController.text.replaceAll(" ", "");
-        String nomeSafe = signupNameController.text.replaceAll(" ", "");
-        String cognomeSafe = signupCognomeController.text.replaceAll(" ", "");
-        String telSafe = signupConfirmTelController.text.replaceAll(" ", "");
-        Auth_Handler.FireBaseRegistration(emailSafe, signupPasswordController.text, nomeSafe, cognomeSafe, telSafe, (result, msg){
-          if(result){
-            DB_Handler_Users.newUser(signupEmailController.text, signupPasswordController.text, signupNameController.text, signupCognomeController.text, signupConfirmTelController.text);
-            showRegistrationDialog(context);
-          }else{
-            CustomSnackBar(context, Text(msg));
-          }
-        });
+      String emailSafe = signupEmailController.text.replaceAll(" ", "");
+      if(EmailValidator.validate(emailSafe)){
+        if(signupConfirmTelController.text.length==10){
+          String nomeSafe = signupNameController.text.replaceAll(" ", "");
+          String cognomeSafe = signupCognomeController.text.replaceAll(" ", "");
+          String telSafe = signupConfirmTelController.text.replaceAll(" ", "");
+          Auth_Handler.FireBaseRegistration(emailSafe, signupPasswordController.text, nomeSafe, cognomeSafe, telSafe, (result, msg){
+            if(result){
+              DB_Handler_Users.newUser(signupEmailController.text, signupPasswordController.text, signupNameController.text, signupCognomeController.text, signupConfirmTelController.text);
+              showRegistrationDialog(context);
+            }else{
+              CustomSnackBar(context, Text(msg));
+            }
+          });
+        }else{
+          CustomSnackBar(context, const Text('Numero di telefono non valido'));
+        }
       }else{
-        CustomSnackBar(context, const Text('Numero di telefono non valido'));
+        CustomSnackBar(context, const Text('E-mail non valida'));
       }
     }
 
