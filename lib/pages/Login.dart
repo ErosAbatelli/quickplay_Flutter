@@ -477,10 +477,11 @@ class _LoginScreenState extends State<LoginScreen> {
           loginPasswordController.text != "") {
         showCheckCredenzialiDialog(context);
         //CheckCredenziali corrette
+        String emailSafe = loginEmailController.text.replaceAll(" ", "");
         Auth_Handler.FireBaseLogin(
             _rememberMe,
             context,
-            loginEmailController.text,
+            emailSafe,
             loginPasswordController.text, (result, msg) {
           if (result) {
             //Credenziali corrette -> Facciamo partire la homePage

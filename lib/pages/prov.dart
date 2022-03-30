@@ -211,13 +211,16 @@ class _RegisterScreenState extends State<FormCircoli> {
             if(!regex.hasMatch(signupEmailController.text)){
               CustomSnackBar(context, const Text("Ricontrollare l'email"));
             }else{
+              String emailSafe = signupEmailController.text.replaceAll(" ","");
+              String telSafe = signupConfirmTelController.text.replaceAll(" ", "");
               if(signupConfirmTelController.text.length==10){
                 DB_Handler_Clubs.newRequest(
-                signupNameController.text,
-                signupEmailController.text,
-                signupConfirmTelController.text,
-                initialPos.latitude,
-                initialPos.longitude);
+                  signupNameController.text,
+                  emailSafe,
+                  telSafe,
+                  initialPos.latitude,
+                  initialPos.longitude
+                );
                 CustomSnackBar(context, const Text('Richiesta inviata'));
               }else{
                 CustomSnackBar(context, const Text('Ricontrollare il numero di telefono'));

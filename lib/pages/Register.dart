@@ -256,7 +256,6 @@ class _RegisterScreenState extends State<Register> {
           child: TextField(
             focusNode: focusNodeTel,
             controller: signupConfirmTelController,
-            obscureText: _obscureTextPassword,
             style: TextStyle(
               color: Colors.black,
               fontFamily: 'OpenSans',
@@ -529,15 +528,22 @@ class _RegisterScreenState extends State<Register> {
     {
       CustomSnackBar(context, const Text('Le password non combaciano'));
     } else {
-
-      Auth_Handler.FireBaseRegistration(signupEmailController.text, signupPasswordController.text, signupNameController.text, signupCognomeController.text, signupConfirmTelController.text, (result, msg){
-        if(result){
-          DB_Handler_Users.newUser(signupEmailController.text, signupPasswordController.text, signupNameController.text, signupCognomeController.text, signupConfirmTelController.text);
-          showRegistrationDialog(context);
-        }else{
-          CustomSnackBar(context, Text(msg));
-        }
-      });
+      if(signupConfirmTelController.text.length==10){
+        String emailSafe = signupEmailController.text.replaceAll(" ", "");
+        String nomeSafe = signupNameController.text.replaceAll(" ", "");
+        String cognomeSafe = signupCognomeController.text.replaceAll(" ", "");
+        String telSafe = signupConfirmTelController.text.replaceAll(" ", "");
+        Auth_Handler.FireBaseRegistration(emailSafe, signupPasswordController.text, nomeSafe, cognomeSafe, telSafe, (result, msg){
+          if(result){
+            DB_Handler_Users.newUser(signupEmailController.text, signupPasswordController.text, signupNameController.text, signupCognomeController.text, signupConfirmTelController.text);
+            showRegistrationDialog(context);
+          }else{
+            CustomSnackBar(context, Text(msg));
+          }
+        });
+      }else{
+        CustomSnackBar(context, const Text('Numero di telefono non valido'));
+      }
     }
 
   }
