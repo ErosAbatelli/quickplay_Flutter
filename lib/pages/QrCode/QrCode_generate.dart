@@ -68,73 +68,27 @@ class _QRCreatePageState extends State<QRCreatePage>
     );
 
   getQRCODE() {
-    print("codice: " + codice);
-    print("ora fine: " + oraFine);
-    print("data: " + data);
-
     var ora_fine = oraFine.split(":");
-
     var ora = int.parse(ora_fine[0]);
-    var min = int.parse(ora_fine[1]);
 
     DateTime oggi = DateTime.now();
     String formattedDateToday = DateFormat('dd-MM-yyyy').format(oggi);
-    String prelevoOraOggi = DateFormat('kk').format(oggi);
-    String prelevoMinOggi = DateFormat('mm').format(oggi);
 
-    var oraScadenza = int.parse(prelevoOraOggi);
-    var minScadenza = int.parse(prelevoMinOggi);
-    oraScadenza += 2;
+    var oraScadenza;
+    oraScadenza = ora +2;
 
 
     print(formattedDateToday);
 
     if(formattedDateToday.compareTo(data) < 0)
       {
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Container(
-                  child: Text("QR CODE",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: "sans-serif-thin",
-                      fontSize: 40,
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(24),
-                ),
-              ),
-              Expanded(
-                flex: 8,
-                child: Container(
-                  alignment: Alignment.center,
-                  child: BarcodeWidget(
-                    barcode: Barcode.qrCode(),
-                    color: Colors.black,
-                    data: codice,
-                    width: 200,
-                    height: 200,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 2,
-                child: Container(),
-              ),
-            ],
-          ),
-        );
+        getBodyQrCode();
       }
     else if(formattedDateToday.compareTo(data) > 0){
       return getBody();
     }
     else if(formattedDateToday.compareTo(data) == 0 && (ora < oraScadenza)) {
-      return getBody();
+      return getBodyQrCode();
     }
 
 
@@ -148,6 +102,48 @@ class _QRCreatePageState extends State<QRCreatePage>
         return VisualizzaPrenotazioni(layoutInfo);
       },
     ), (route) => false);
+  }
+
+  Widget getBodyQrCode()
+  {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: Container(
+              child: Text("QR CODE",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontFamily: "sans-serif-thin",
+                  fontSize: 40,
+                ),
+              ),
+              alignment: Alignment.center,
+              padding: EdgeInsets.all(24),
+            ),
+          ),
+          Expanded(
+            flex: 8,
+            child: Container(
+              alignment: Alignment.center,
+              child: BarcodeWidget(
+                barcode: Barcode.qrCode(),
+                color: Colors.black,
+                data: codice,
+                width: 200,
+                height: 200,
+              ),
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Container(),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget getBody() {

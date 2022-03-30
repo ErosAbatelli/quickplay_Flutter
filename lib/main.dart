@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:quickplay/pages/Login.dart';
+import 'package:quickplay/pages_club/Home_Menu_Club.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
