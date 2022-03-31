@@ -5,6 +5,7 @@ import 'package:quickplay/ViewModel/Auth_Handler.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Reservations.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Users.dart';
 import 'package:quickplay/models/models.dart';
+import 'package:quickplay/pages/ReservationList.dart';
 import 'package:quickplay/utils/dialog_helper.dart';
 import 'package:quickplay/utils/drawerMenu/drawerMenu/itemDrawerMenu.dart';
 import 'package:quickplay/utils/drawerMenu/flutter_advanced_drawer.dart';
@@ -229,24 +230,9 @@ class _HomeMenuState extends State<HomeMenu> {
             /**
              * VISUALIZZA PRENOTAZIONI
              */
-            if (_selectedIndex == 1) //Visualizza prenotazioni
-                {
-              List<LayoutInfo> layoutData = [];
-              showLoaderDialog(context);
-              var prenotazioni = await DB_Handler_Users.getReservations(Auth_Handler.CURRENT_USER.email);
-              await Future.forEach(prenotazioni, (element) async
-              {
-
-                LayoutInfo info = await DB_Handler_Reservations.getReservationLayoutInfo(
-                    element);
-                layoutData.add(info);
-
-              });
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          VisualizzaPrenotazioni(layoutData)));
+            if (_selectedIndex == 1)
+            {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => VisualizzaPrenotazioni()));
             }
 
             /**

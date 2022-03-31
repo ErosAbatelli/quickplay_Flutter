@@ -99,7 +99,7 @@ class _QRCreatePageState extends State<QRCreatePage>
 
     return Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
       builder: (context) {
-        return VisualizzaPrenotazioni(layoutInfo);
+        return VisualizzaPrenotazioni();
       },
     ), (route) => false);
   }

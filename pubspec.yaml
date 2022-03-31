@@ -26,10 +26,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   shared_preferences: ^2.0.6
   image_picker: ^0.8.3
+
   dio: ^4.0.0
   flutter_polyline_points: ^0.2.6
   google_maps_flutter: ^2.0.2
-  email_validator: '^1.0.6'
+
   clipboard_manager: ^0.0.4
   flutter_barcode_scanner: ^2.0.0
   barcode_widget: ^1.5.0
@@ -40,6 +41,7 @@ dependencies:
   map_picker: ^0.0.3
   geocoding: ^2.0.1
   ff_navigation_bar: ^0.1.5
+  email_validator: ^2.0.1
   internet_connection_checker: ^0.0.1+3
 
 
