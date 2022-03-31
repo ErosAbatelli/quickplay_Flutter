@@ -50,9 +50,25 @@ class _RegisterScreenState extends State<FormCircoli> {
   }
 
   getPos() async {
-    initialPos = await getLocation();
-    mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
-    setState(() {});
+    await Geolocator.isLocationServiceEnabled().then((value) async {
+      if (!value) {
+        showDialog(context: context, builder: buildGeolocatorAlert1)
+            .then((value) {
+          Navigator.pop(context);
+        });
+      } else {
+        await Geolocator.checkPermission().then((value) async {
+          if (value == LocationPermission.denied) {
+            showDialog(context: context, builder: buildGeolocatorAlert2);
+          } else {
+
+            initialPos = await getLocation();
+            mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
+            setState(() {});
+          }
+        });
+      }
+    });
   }
 
   Future<Position> getLocation() async {
@@ -389,6 +405,8 @@ class _RegisterScreenState extends State<FormCircoli> {
       },
     );
   }
+
+
 
   void updateLocation(CameraPosition _position) {
     Position newMarkerPosition = Position(
