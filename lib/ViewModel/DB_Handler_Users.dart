@@ -1,6 +1,7 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import "package:quickplay/models/models.dart";
 
 import 'Auth_Handler.dart';
@@ -39,7 +40,7 @@ class DB_Handler_Users{
   }
 
 
-  static applyMod(String nome,String cognome,String telefono,callBack()) async {
+  static applyMod(String nome,String cognome,String telefono,String password,callBack()) async {
     if(nome=="") nome = Auth_Handler.CURRENT_USER.nome;
     if(cognome=="") cognome = Auth_Handler.CURRENT_USER.cognome;
     if(telefono=="") telefono = Auth_Handler.CURRENT_USER.telefono;
@@ -49,6 +50,11 @@ class DB_Handler_Users{
       'cognome':cognome.toLowerCase(),
       'telefono':telefono
     });
+    if(password != Auth_Handler.passwordCU){
+      Auth_Handler.passwordCU = password;
+      FirebaseUser currentUser = await FirebaseAuth.instance.currentUser();
+      currentUser.updatePassword(password);
+    }
     Auth_Handler.CURRENT_USER.nome = nome;
     Auth_Handler.CURRENT_USER.cognome = cognome;
     Auth_Handler.CURRENT_USER.telefono = telefono;

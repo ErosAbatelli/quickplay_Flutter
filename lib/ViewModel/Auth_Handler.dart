@@ -20,6 +20,7 @@ class Auth_Handler{
   static User CURRENT_USER  = null;
   static String profileImg = "";
 
+  static String passwordCU = "";
 
   static setLOGGED_IN(){
     LOGGED_IN = true;
@@ -59,8 +60,9 @@ class Auth_Handler{
             returnedUser.nome,
             returnedUser.cognome,
             returnedUser.email,
-            returnedUser.telefono,
+            returnedUser.telefono
         );
+        passwordCU = password;
         myCallBack(true);
       }else{
         CURRENT_USER = null;
@@ -75,6 +77,7 @@ class Auth_Handler{
 
   static setLOGGET_OUT(BuildContext context) async {
   LOGGED_IN = false;
+  passwordCU = "";
   CURRENT_USER = null;
   prefs = await SharedPreferences.getInstance();
   prefs.setString("email", "");

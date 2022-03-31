@@ -28,6 +28,7 @@ class _ProfileScreenState extends State<Profile> with SingleTickerProviderStateM
   StorageReference storageReference = FirebaseStorage.instance.ref();
 
   TextEditingController nomeController = TextEditingController();
+  TextEditingController passController = TextEditingController();
   TextEditingController cognomeController = TextEditingController();
   TextEditingController cellulareController = TextEditingController();
   final _advancedDrawerController = AdvancedDrawerController();
@@ -306,6 +307,53 @@ class _ProfileScreenState extends State<Profile> with SingleTickerProviderStateM
                                   ),
                                 ],
                               )),
+                          //-------------------------------------INIZIO campo temporaneo password
+
+                          Visibility(
+                            visible: !_status,
+                            child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25.0, right: 25.0, top: 25.0),
+                                child: new Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Container(
+                                        child: new Text(
+                                          'Password',
+                                          style: TextStyle(
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      flex: 2,
+                                    ),
+                                  ],
+                                )),
+                          ),
+                          Visibility(
+                            visible: !_status,
+                            child: Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25.0, right: 25.0, top: 2.0),
+                                child: new Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  children: <Widget>[
+                                    new Flexible(
+                                      child: new TextField(
+                                        controller : passController,
+                                        decoration: InputDecoration(
+                                          hintText: Auth_Handler.passwordCU,
+                                        ),
+                                        enabled: !_status,
+                                      ),
+                                    ),
+                                  ],
+                                )),
+                          ),
+
+                          //-------------------------------------fine campo temporaneo password
                           Padding(
                               padding: EdgeInsets.only(
                                   left: 25.0, right: 25.0, top: 25.0),
@@ -404,7 +452,7 @@ class _ProfileScreenState extends State<Profile> with SingleTickerProviderStateM
                         _status = true;
                         FocusScope.of(context).requestFocus(new FocusNode());
                       });
-                      DB_Handler_Users.applyMod(nomeController.text, cognomeController.text, cellulareController.text, (){
+                      DB_Handler_Users.applyMod(nomeController.text, cognomeController.text, cellulareController.text, passController.text,(){
                         Navigator.pop(context);
                       });
                     },
