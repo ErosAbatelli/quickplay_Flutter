@@ -43,30 +43,16 @@ class _RegisterScreenState extends State<FormCircoli> {
   Position initialPos = Position(latitude: 50.586751779797915, longitude: 13.51659500105265);
 
 
-
-
+  @override
+  void initState() {
+    getPos();
+    super.initState();
+  }
 
   getPos() async {
-    await Geolocator.isLocationServiceEnabled().then((value) async {
-      if (!value) {
-        showDialog(context: context, builder: buildGeolocatorAlert1)
-            .then((value) {
-          Navigator.pop(context);
-        });
-      } else {
-        await Geolocator.checkPermission().then((value) async {
-          if (value == LocationPermission.denied) {
-            showDialog(context: context, builder: buildGeolocatorAlert2);
-          } else {
-
-            initialPos = await getLocation();
-            mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
-            setState(() {});
-          }
-        });
-      }
-    });
-
+    initialPos = await getLocation();
+    mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
+    setState(() {});
   }
 
   Future<Position> getLocation() async {
@@ -79,13 +65,6 @@ class _RegisterScreenState extends State<FormCircoli> {
       pos = await Geolocator.getLastKnownPosition();
     }
     return pos;
-  }
-
-  @override
-  void initState() {
-    getPos();
-    super.initState();
-
   }
 
   @override
