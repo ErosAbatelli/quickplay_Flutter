@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<FormCircoli> {
   TextEditingController signupEmailController = TextEditingController();
   TextEditingController signupNameController = TextEditingController();
   TextEditingController signupConfirmTelController = TextEditingController();
-  Position initialPos = Position(longitude: 43.586751779797915, latitude: 13.51659500105265);
+  Position initialPos = Position(latitude: 43.586751779797915, longitude: 13.51659500105265);
 
 
 
