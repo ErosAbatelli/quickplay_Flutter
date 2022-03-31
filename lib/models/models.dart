@@ -29,8 +29,9 @@ class Prenotazione
   String prenotatore;
   DateTime oraInizio;
   DateTime oraFine;
+  bool checked;
 
-  Prenotazione(this.id, this.prenotatore, this.oraInizio, this.oraFine);
+  Prenotazione(this.id, this.prenotatore, this.oraInizio, this.oraFine,this.checked);
 }
 
 

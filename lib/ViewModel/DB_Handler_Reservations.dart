@@ -52,7 +52,7 @@ class DB_Handler_Reservations {
       DateTime oraInizio = DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
       timestamp = element.data['oraFine'];
       DateTime oraFine = DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
-      prenotazioni.add(Prenotazione(element.documentID, ref.documentID , oraInizio, oraFine));
+      prenotazioni.add(Prenotazione(element.documentID, ref.documentID , oraInizio, oraFine,element.data['checked']));
     });
     callback(prenotazioni);
   }
@@ -89,7 +89,8 @@ class DB_Handler_Reservations {
       myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).collection("prenotazioni").document(codedID).setData({
         "oraFine" : tsFine,
         "oraInizio" : tsInizio,
-        "prenotatore" : prenotatore
+        "prenotatore" : prenotatore,
+        "checked" : false
       });
     }else{
       //Crea il documento (compreso il dummy text) e registra la prenotazione
@@ -97,7 +98,8 @@ class DB_Handler_Reservations {
         myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).collection("prenotazioni").document(codedID).setData({
           "oraFine" : tsFine,
           "oraInizio" : tsInizio,
-          "prenotatore" : prenotatore
+          "prenotatore" : prenotatore,
+          "checked" : false
         });
       });
     }
@@ -105,7 +107,8 @@ class DB_Handler_Reservations {
         {
           "oraFine" : tsFine,
           "oraInizio" : tsInizio,
-          "prenotatore" : prenotatore
+          "prenotatore" : prenotatore,
+          "checked" : false
         });
 
   }

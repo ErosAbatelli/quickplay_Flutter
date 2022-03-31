@@ -104,7 +104,8 @@ class DB_Handler_Users{
           element.documentID,
           prenotatore.documentID,
           datainizio,
-          dataFine
+          dataFine,
+          element.data["checked"]
         ));
       });
 

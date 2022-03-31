@@ -40,13 +40,13 @@ class _RegisterScreenState extends State<FormCircoli> {
   TextEditingController signupEmailController = TextEditingController();
   TextEditingController signupNameController = TextEditingController();
   TextEditingController signupConfirmTelController = TextEditingController();
-  Position initialPos = Position(latitude: 50.586751779797915, longitude: 13.51659500105265);
+  Position initialPos;
 
 
   @override
   void initState() {
-    getPos();
     super.initState();
+    getPos();
   }
 
   getPos() async {
@@ -61,26 +61,16 @@ class _RegisterScreenState extends State<FormCircoli> {
           if (value == LocationPermission.denied) {
             showDialog(context: context, builder: buildGeolocatorAlert2);
           } else {
-
-            initialPos = await getLocation();
-            mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
-            setState(() {});
+            Geolocator.getCurrentPosition().then((value) {
+              setState(() {
+                initialPos = value;
+              });
+            }
+            );
           }
         });
       }
     });
-  }
-
-  Future<Position> getLocation() async {
-    Position pos;
-    try {
-      pos = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.best,
-          timeLimit: Duration(seconds: 5));
-    } catch (err) {
-      pos = await Geolocator.getLastKnownPosition();
-    }
-    return pos;
   }
 
   @override
@@ -327,15 +317,21 @@ class _RegisterScreenState extends State<FormCircoli> {
               child: Container(
                 width: MediaQuery.of(context).size.width,
                   child:MapPicker(
-                    iconWidget: Icon(
+                    iconWidget: initialPos == null
+                        ? null
+                        :
+                    Icon(
                       Icons.add_location_alt,
                       color: Colors.pink,
                       size: 40.0,
                       semanticLabel: 'Text to announce in accessibility modes',
                     ),
+
                     //add map picker controller
                     mapPickerController: mapPickerController,
-                    child: GoogleMap(
+                    child: initialPos == null
+                        ? CircularProgressIndicator()
+                        : GoogleMap(
                       mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
                         target: LatLng(initialPos.latitude, initialPos.longitude),
