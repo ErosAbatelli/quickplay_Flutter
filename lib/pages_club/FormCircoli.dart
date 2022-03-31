@@ -58,7 +58,7 @@ class _RegisterScreenState extends State<FormCircoli> {
           if (value == LocationPermission.denied) {
             showDialog(context: context, builder: buildGeolocatorAlert2);
           } else {
-            initialPos =  await Geolocator.getLastKnownPosition();
+            initialPos =  await Geolocator.getLastKnownPosition(forceAndroidLocationManager: true);
             mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
             setState(() {});
           }
@@ -331,7 +331,7 @@ class _RegisterScreenState extends State<FormCircoli> {
                       mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
                         target: LatLng(initialPos.latitude, initialPos.longitude),
-                        zoom: 5,
+                        zoom: 10,
                       ),
                       onCameraMove: ((_position) => updateLocation(_position)),
                       onMapCreated: (GoogleMapController controller) {
