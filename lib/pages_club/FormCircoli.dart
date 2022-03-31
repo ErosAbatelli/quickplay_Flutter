@@ -34,7 +34,7 @@ class _RegisterScreenState extends State<FormCircoli> {
   final FocusNode focusNodeName = FocusNode();
   final FocusNode focusNodeCognome = FocusNode();
   final FocusNode focusNodeTel = FocusNode();
-
+  bool checkedValue = false;
   double opacity;
 
   TextEditingController signupEmailController = TextEditingController();
@@ -216,6 +216,7 @@ class _RegisterScreenState extends State<FormCircoli> {
                       signupNameController.text,
                       emailSafe,
                       telSafe,
+                      checkedValue,
                       initialPos.latitude,
                       initialPos.longitude
                   );
@@ -300,12 +301,25 @@ class _RegisterScreenState extends State<FormCircoli> {
               children: [
                 _buildNome(),
                 _buildEmail(),
-                _buildCellulare()
+                _buildCellulare(),
+                Expanded(
+                  flex: 1,
+                  child: CheckboxListTile(
+                    title: Text("Docce"),
+                    value: checkedValue,
+                    onChanged: (newValue) {
+                      setState(() {
+                        checkedValue = newValue;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+                  ),
+                )
               ],
             ),
           ),
             Expanded(
-              flex: 5,
+              flex: 4,
               child: Container(
                 width: MediaQuery.of(context).size.width,
                   child:MapPicker(
@@ -336,7 +350,6 @@ class _RegisterScreenState extends State<FormCircoli> {
             flex: 1,
             child: _buildRegisterBtn(),
           ),
-
         ],
       ),
     );

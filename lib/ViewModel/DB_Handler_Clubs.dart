@@ -30,7 +30,7 @@ class DB_Handler_Clubs{
     return clubs;
   }
 
-  static Future<bool> newRequest(String nomeC, String email, String telC,double lat, double lng,) async {
+  static Future<bool> newRequest(String nomeC, String email, String telC,bool docce,double lat, double lng,) async {
     var location = GeoPoint(lat, lng);
     bool returnValue = true;
     try{
@@ -38,7 +38,8 @@ class DB_Handler_Clubs{
         'email':email,
         'nome':nomeC.toLowerCase(),
         'posizione':location,
-        'telefono' : telC
+        'telefono' : telC,
+        'docce' : docce
       });
     }catch (e) {
       returnValue = false;
