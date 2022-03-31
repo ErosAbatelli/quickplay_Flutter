@@ -40,7 +40,7 @@ class _RegisterScreenState extends State<FormCircoli> {
   TextEditingController signupEmailController = TextEditingController();
   TextEditingController signupNameController = TextEditingController();
   TextEditingController signupConfirmTelController = TextEditingController();
-  Position initialPos = Position(latitude: 43.586751779797915, longitude: 13.51659500105265);
+  Position initialPos = Position(latitude: 50.586751779797915, longitude: 13.51659500105265);
 
 
 
@@ -58,7 +58,8 @@ class _RegisterScreenState extends State<FormCircoli> {
           if (value == LocationPermission.denied) {
             showDialog(context: context, builder: buildGeolocatorAlert2);
           } else {
-            initialPos =  await Geolocator.getLastKnownPosition(forceAndroidLocationManager: true);
+
+            initialPos = await getLocation();
             mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
             setState(() {});
           }
@@ -66,6 +67,18 @@ class _RegisterScreenState extends State<FormCircoli> {
       }
     });
 
+  }
+
+  Future<Position> getLocation() async {
+    Position pos;
+    try {
+      pos = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.best,
+          timeLimit: Duration(seconds: 5));
+    } catch (err) {
+      pos = await Geolocator.getLastKnownPosition();
+    }
+    return pos;
   }
 
   @override
