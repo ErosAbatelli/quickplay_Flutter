@@ -48,34 +48,47 @@ class _QRScanPageState extends State<QRScanPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'Scan Result',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                flex: 2,
+                child: Container(
+                  child: Text("Scannerizza prenotazione",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: "sans-serif-thin",
+                  ),),
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
-                '$qrCode',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Expanded(
+                flex: 6,
+                child: Container(
+                  color: Colors.blue,
+                  child: Text(
+                    '$qrCode',
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 72),
-              RaisedButton(
-                child: Text(
-                  "Scannerizza QR Code",
-                  style: TextStyle(fontSize: 24),
+              Flexible(
+                child: Container(
+                  child: RaisedButton(
+                    child: Text(
+                      "SCAN",
+                      style: TextStyle(fontSize: 17),
+                    ),
+                    shape: StadiumBorder(),
+                    color: Colors.orange,
+                    textColor: Colors.white,
+                    onPressed: () => scanQRCode(),
+                  ),
                 ),
-                shape: StadiumBorder(),
-                color: Theme.of(context).primaryColor,
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                textColor: Colors.white,
-                onPressed: () => scanQRCode(),
+              ),
+              Expanded(
+                child: Container(),
               )
             ],
           ),

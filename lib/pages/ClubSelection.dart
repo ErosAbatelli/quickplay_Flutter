@@ -147,7 +147,7 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
               ),
               collapsed: Container(
                   decoration: BoxDecoration(
-                    color: Colors.blueGrey,
+                    color: Colors.orange,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(24.0),
                       topRight: Radius.circular(24.0),
@@ -169,9 +169,9 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
                             child: Text(
                               "FILTRI",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 25,
-                                fontFamily: "sans-serif-thin",
+                                fontFamily: "sans-serif-medium",
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -303,10 +303,11 @@ class _EffettuaPrenotazione extends State<EffettuaPrenotazione> {
             Expanded(
                 child: Center(
                   child: Text(
-                    "FILTRI DI RICERCA",
+                    "FILTRI",
                     style: TextStyle(
                         color: Colors.black,
                         fontFamily: "sans-serif-medium",
+                        fontWeight: FontWeight.w600,
                         fontSize: 25),
                   ),
                 )),
