@@ -55,17 +55,13 @@ class _RegisterScreenState extends State<FormCircoli> {
         });
       } else {
         await Geolocator.checkPermission().then((value) async {
-          showLoaderDialog(context);
           if (value == LocationPermission.denied) {
-            showDialog(context: context, builder: buildGeolocatorAlert2)
-                .then((value) {
-              Navigator.pop(context);
-            });
+            showDialog(context: context, builder: buildGeolocatorAlert2);
           } else {
             initialPos =  await Geolocator.getLastKnownPosition();
             mapController.moveCamera(CameraUpdate.newCameraPosition(CameraPosition(bearing: 0.0,target: LatLng(initialPos.latitude,initialPos.longitude),tilt: 45,zoom: 10)));
-            Navigator.pop(context);
-            setState(() {});          }
+            setState(() {});
+          }
         });
       }
     });
