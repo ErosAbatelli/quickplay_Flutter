@@ -104,12 +104,14 @@ class _QRCreatePageState extends State<QRCreatePage> {
     print(_oraFineSplit);
     print(oraFineSplit);
 
-    if (formattedDateToday.compareTo(data) < 0) {
-      getBodyQrCode();
-    } else if (formattedDateToday.compareTo(data) > 0) {
+    if (formattedDateToday.compareTo(data) > 0) {
+      return getBodyQrCode();
+    } else if (formattedDateToday.compareTo(data) < 0) {
+      return getBody();
+    } else if (formattedDateToday.compareTo(data) == 0 && oraScadenza < oraFineSplit) {
       return getBody();
     } else if (formattedDateToday.compareTo(data) == 0 && oraScadenza > oraFineSplit) {
-      return getBody();
+      return getBodyQrCode();
     }
   }
 
