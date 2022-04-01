@@ -217,18 +217,20 @@ class _SelezioneOrario extends State<SelezioneOrario> {
       buttonsEnabled["6:30"] = false;
       buttonsColour["6:30"] = Colors.red;
       int ora = 7;
-      while(ora.toString()!=oraNow){
+      if((DateTime.now().hour>=6)&&(DateTime.now().minute>30)){
+        while(ora.toString()!=oraNow){
+          buttonsEnabled[ora.toString()+":00"] = false;
+          buttonsColour[ora.toString()+":00"] = Colors.red;
+          buttonsEnabled[ora.toString()+":30"] = false;
+          buttonsColour[ora.toString()+":30"] = Colors.red;
+          ora+=1;
+        }
         buttonsEnabled[ora.toString()+":00"] = false;
         buttonsColour[ora.toString()+":00"] = Colors.red;
         buttonsEnabled[ora.toString()+":30"] = false;
         buttonsColour[ora.toString()+":30"] = Colors.red;
-        ora+=1;
       }
-      buttonsEnabled[ora.toString()+":00"] = false;
-      buttonsColour[ora.toString()+":00"] = Colors.red;
-      buttonsEnabled[ora.toString()+":30"] = false;
-      buttonsColour[ora.toString()+":30"] = Colors.red;
-    }
+      }
 
 
 
