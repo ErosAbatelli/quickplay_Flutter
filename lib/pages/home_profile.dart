@@ -43,8 +43,6 @@ class _ProfileScreenState extends State<Profile>
   final FocusNode focusNodePassWord = FocusNode();
   final FocusNode focusNodeConfPassWord = FocusNode();
 
-  static String profileImg = "";
-
   @override
   void dispose() {
     focusNodeNome.dispose();
@@ -487,15 +485,44 @@ class _ProfileScreenState extends State<Profile>
 
   Widget _getEditIcon() {
     return new GestureDetector(
-      child: new CircleAvatar(
-        backgroundColor: Colors.red,
-        radius: 14.0,
-        child: new Icon(
-          Icons.edit,
-          color: Colors.white,
-          size: 16.0,
+
+        child: RaisedButton(
+          elevation: 5.0,
+          onPressed: (){
+            setState(() {
+              _status = false;
+            });
+          },
+          padding: EdgeInsets.all(10.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              side: BorderSide(
+                  color: Colors.black26, width: 1.0)),
+          color: Colors.red,
+          child: RichText(
+            text: TextSpan(
+              text:
+                'Modifica  ',
+                style: TextStyle(
+                  color: Colors.white,
+                  letterSpacing: 1.5,
+                  fontSize: 13.0,
+                  fontFamily: 'sans-serif-medium',
+              ),
+              children: [
+                WidgetSpan(
+                  child: Icon(
+                    Icons.edit,
+                    color: Colors.white,
+                    size: 16.0,
+                  ),
+                )
+              ]
+            ),
+          )
+
+
         ),
-      ),
       onTap: () {
         setState(() {
           _status = false;
@@ -594,11 +621,17 @@ class _ProfileScreenState extends State<Profile>
   }
 
   Future<bool> onBackPressed() {
-    return Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
-      builder: (context) {
-        return HomeMenu();
-      },
-    ), (route) => false);
+    if(_status){
+      return Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+        builder: (context) {
+          return HomeMenu();
+        },
+      ), (route) => false);
+    }else{
+      setState(() {
+        _status = true;
+      });
+    }
   }
 }
 
