@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -30,6 +31,8 @@ class _ProfileScreenState extends State<Profile>
 
   TextEditingController nomeController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  TextEditingController passConfController = TextEditingController();
+
   TextEditingController cognomeController = TextEditingController();
   TextEditingController cellulareController = TextEditingController();
   final _advancedDrawerController = AdvancedDrawerController();
@@ -37,6 +40,8 @@ class _ProfileScreenState extends State<Profile>
   final FocusNode focusNodeNome = FocusNode();
   final FocusNode focusNodeCognome = FocusNode();
   final FocusNode focusNodeCellulare = FocusNode();
+  final FocusNode focusNodePassWord = FocusNode();
+  final FocusNode focusNodeConfPassWord = FocusNode();
 
   static String profileImg = "";
 
@@ -62,6 +67,8 @@ class _ProfileScreenState extends State<Profile>
       systemNavigationBarDividerColor: Colors.transparent,
       systemNavigationBarColor: Colors.transparent,
     ));
+    passController.text = Auth_Handler.passwordCU;
+    passConfController.text = Auth_Handler.passwordCU;
     return AdvancedDrawer(
         backdropColor: Colors.blueGrey,
         controller: _advancedDrawerController,
@@ -318,6 +325,9 @@ class _ProfileScreenState extends State<Profile>
                                                   .CURRENT_USER.telefono),
                                           enabled: !_status,
                                           focusNode: focusNodeCellulare,
+                                          onSubmitted: (_){
+                                            focusNodePassWord.requestFocus();
+                                          },
                                         ),
                                       ),
                                     ],
@@ -358,10 +368,9 @@ class _ProfileScreenState extends State<Profile>
                                       children: <Widget>[
                                         new Flexible(
                                           child: new TextField(
+                                            obscureText: true,
                                             controller: passController,
-                                            decoration: InputDecoration(
-                                              hintText: Auth_Handler.passwordCU,
-                                            ),
+                                            focusNode: focusNodePassWord,
                                             enabled: !_status,
                                           ),
                                         ),
@@ -369,48 +378,98 @@ class _ProfileScreenState extends State<Profile>
                                     )),
                               ),
 
-                              //-------------------------------------fine campo temporaneo password
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 25.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: Container(
-                                          child: new Text(
-                                            'Email',
-                                            style: TextStyle(
-                                                fontSize: 16.0,
-                                                fontWeight: FontWeight.bold),
+                              Visibility(
+                                visible: !_status,
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 25.0),
+                                    child: new Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Container(
+                                            child: new Text(
+                                              'Conferma password',
+                                              style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
+                                          flex: 2,
                                         ),
-                                        flex: 2,
-                                      ),
-                                    ],
-                                  )),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 25.0, right: 25.0, top: 2.0),
-                                  child: new Row(
-                                    mainAxisSize: MainAxisSize.max,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Flexible(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(right: 10.0),
+                                      ],
+                                    )),
+                              ),
+                              Visibility(
+                                visible: !_status,
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 2.0),
+                                    child: new Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: <Widget>[
+                                        new Flexible(
                                           child: new TextField(
-                                            decoration: InputDecoration(
-                                                hintText: Auth_Handler
-                                                    .CURRENT_USER.email),
-                                            enabled: false,
+                                            obscureText: true,
+                                            controller: passConfController,
+                                            focusNode: focusNodeConfPassWord,
+                                            enabled: !_status,
                                           ),
                                         ),
-                                        flex: 2,
-                                      ),
-                                    ],
-                                  )),
+                                      ],
+                                    )),
+                              ),
+                              //-------------------------------------fine campo temporaneo password
+                              Visibility(
+                                visible: _status,
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 25.0),
+                                    child: new Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Container(
+                                            child: new Text(
+                                              'Email',
+                                              style: TextStyle(
+                                                  fontSize: 16.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                          flex: 2,
+                                        ),
+                                      ],
+                                    )
+                                ),
+                              ),
+                              Visibility(
+                                visible: _status,
+                                child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 25.0, right: 25.0, top: 2.0),
+                                    child: new Row(
+                                      mainAxisSize: MainAxisSize.max,
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Flexible(
+                                          child: Padding(
+                                            padding: EdgeInsets.only(right: 10.0),
+                                            child: new TextField(
+                                              decoration: InputDecoration(
+                                                  hintText: Auth_Handler
+                                                      .CURRENT_USER.email),
+                                              enabled: false,
+                                            ),
+                                          ),
+                                          flex: 2,
+                                        ),
+                                      ],
+                                    )),
+                              ),
                               !_status ? _getActionButtons() : new Container(),
                             ],
                           ),
@@ -457,27 +516,32 @@ class _ProfileScreenState extends State<Profile>
               padding: EdgeInsets.only(right: 10.0),
               child: Container(
                   child: new RaisedButton(
-                child: new Text("Save"),
+                child: new Text("Salva"),
                 textColor: Colors.white,
                 color: Colors.green,
                 onPressed: () {
                   showModificheDialog(context);
-                  setState(() {
-                    _status = true;
-                    FocusScope.of(context).requestFocus(new FocusNode());
-                  });
-                  if (Auth_Handler.passwordCU != passController.text) {
-                    DB_Handler_Users.applyMod(
-                        nomeController.text,
-                        cognomeController.text,
-                        cellulareController.text,
-                        passController.text, () {
-                      Navigator.pop(context);
-                    });
-                  } else {
-                    CustomSnackBar(context,
-                        const Text('Non utilizzare la stessa password'));
+                  if(passConfController.text != passController.text){
+                    CustomSnackBar(context,const Text("Le due password non coincidono"));
                     Navigator.pop(context);
+
+                  }else{
+                    if (passController.text.toString() == "" ) {
+                      CustomSnackBar(context,const Text("Inserire una password"));
+                      Navigator.pop(context);
+                    }else{
+                      DB_Handler_Users.applyMod(
+                          nomeController.text,
+                          cognomeController.text,
+                          cellulareController.text,
+                          passController.text, () {
+                        Navigator.pop(context);
+                        setState(() {
+                          _status = true;
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                        });
+                      });
+                    }
                   }
                 },
                 shape: new RoundedRectangleBorder(
@@ -491,7 +555,7 @@ class _ProfileScreenState extends State<Profile>
               padding: EdgeInsets.only(left: 10.0),
               child: Container(
                   child: new RaisedButton(
-                child: new Text("Cancel"),
+                child: new Text("Annulla"),
                 textColor: Colors.white,
                 color: Colors.red,
                 onPressed: () {
