@@ -2,8 +2,10 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:quickplay/ViewModel/DB_Handler_Users.dart';
 import 'package:quickplay/models/models.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:quickplay/widgets/snackbar.dart';
 
 
 class DB_Handler_Clubs{
@@ -30,21 +32,28 @@ class DB_Handler_Clubs{
     return clubs;
   }
 
-  static Future<bool> newRequest(String nomeC, String email, String telC,bool docce,double lat, double lng,) async {
+  static Future<String> newRequest(String nomeC, String email, String telC,bool docce,double lat, double lng) async {
     var location = GeoPoint(lat, lng);
-    bool returnValue = true;
-    try{
-      await myRef.collection("richieste_circoli").document(email).setData({
-        'email':email,
-        'nome':nomeC.toLowerCase(),
-        'posizione':location,
-        'telefono' : telC,
-        'docce' : docce
-      });
-    }catch (e) {
-      returnValue = false;
+    String outputString = "";
+    DocumentSnapshot returnedData = await myRef.collection("users").document(email).get();
+    if(returnedData.data==null){
+      try{
+        await myRef.collection("richieste_circoli").document(email).setData({
+          'email':email,
+          'nome':nomeC.toLowerCase(),
+          'posizione':location,
+          'telefono' : telC,
+          'docce' : docce
+        });
+        outputString = "Richiesta inviata con successo.";
+      }catch (e) {
+        outputString = "Errore nell'invio della richiesta.";
+      }
+    }else{
+      outputString = "E-mail già in uso.";
     }
-    return returnValue;
+
+    return outputString;
   }
 
   static Future<List<Club>> getAllClubsInRange(int range,LatLng position) async{

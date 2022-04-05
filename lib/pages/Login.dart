@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickplay/ViewModel/Auth_Handler.dart';
 import 'package:quickplay/pages/Register.dart';
 import 'package:quickplay/pages/home_Menu.dart';
@@ -483,26 +484,32 @@ class _LoginScreenState extends State<LoginScreen> {
       //Check della presenza di credenziali
       if (loginEmailController.text != "" &&
           loginPasswordController.text != "") {
-        showCheckCredenzialiDialog(context);
-        //CheckCredenziali corrette
-        String emailSafe = loginEmailController.text.replaceAll(" ", "");
-        Auth_Handler.FireBaseLogin(
-            _rememberMe,
-            context,
-            emailSafe,
-            loginPasswordController.text, (result, msg) {
-          if (result) {
-            //Credenziali corrette -> Facciamo partire la homePage
-            Navigator.pop(context);
-            Navigator.push(
+        //Controllo presenza internet
+        bool result = await InternetConnectionChecker().hasConnection;
+        if(result){
+          //CheckCredenziali corrette
+          showCheckCredenzialiDialog(context);
+          String emailSafe = loginEmailController.text.replaceAll(" ", "");
+          Auth_Handler.FireBaseLogin(
+              _rememberMe,
               context,
-              MaterialPageRoute(builder: (context) => HomeMenu()),
-            );
-          } else {
-            Navigator.pop(context);
-            CustomSnackBar(context, Text(msg));
-          }
-        });
+              emailSafe,
+              loginPasswordController.text, (result, msg) {
+            if (result) {
+              //Credenziali corrette -> Facciamo partire la homePage
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeMenu()),
+              );
+            } else {
+              Navigator.pop(context);
+              CustomSnackBar(context, Text(msg));
+            }
+          });
+        }else{
+          CustomSnackBar(context, Text("Connessione ad internet assente"));
+        }
       }
     }
   }

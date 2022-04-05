@@ -206,7 +206,8 @@ class _RegisterScreenState extends State<FormCircoli> {
                 bool result = await InternetConnectionChecker().hasConnection;
                 if(result == true) {
                   showLoaderDialog(context);
-                  bool esito = await DB_Handler_Clubs.newRequest(
+
+                  String text = await DB_Handler_Clubs.newRequest(
                       signupNameController.text,
                       emailSafe,
                       telSafe,
@@ -215,12 +216,9 @@ class _RegisterScreenState extends State<FormCircoli> {
                       initialPos.longitude
                   );
 
+
                   Navigator.pop(context);
-                  if(esito){
-                    showAlertDialog(context);
-                  }else{
-                    CustomSnackBar(context, const Text("Errore nell'invio della richiesta"));
-                  }
+                  showAlertDialog(context,"Operazione conclusa",text);
                 } else {
                   CustomSnackBar(context, const Text('Connessione ad internet assente'));
                 }
@@ -355,7 +353,7 @@ class _RegisterScreenState extends State<FormCircoli> {
     );
   }
 
-  showAlertDialog(BuildContext context) {
+  showAlertDialog(BuildContext context,String title,String text) {
     // set up the button
     Widget okButton = TextButton(
       child: Text("OK"),
@@ -366,8 +364,8 @@ class _RegisterScreenState extends State<FormCircoli> {
     );
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Operazione conclusa"),
-      content: Text("Richiesta inviata con successo."),
+      title: Text(title),
+      content: Text(text),
       actions: [
         okButton,
       ],
