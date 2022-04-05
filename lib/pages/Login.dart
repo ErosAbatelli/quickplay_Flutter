@@ -8,6 +8,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:quickplay/ViewModel/Auth_Handler.dart';
 import 'package:quickplay/pages/Register.dart';
 import 'package:quickplay/pages/home_Menu.dart';
+import 'package:quickplay/pages_club/Home_Menu_Club.dart';
 import 'package:quickplay/utils/constants.dart';
 import 'package:quickplay/widgets/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -136,7 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
               hintStyle: kHintTextStyle,
             ),
             onSubmitted: (_) {
-              _toggleSignInButton();
+              _LoginButton();
             },
             textInputAction: TextInputAction.go,
           ),
@@ -440,7 +441,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   //Metodo per l'invio dalla tastiera.
-  void _toggleSignInButton() {
+/*  void _toggleSignInButton() {
     if (loginEmailController.text == "" ||
         loginPasswordController.text == "" ||
         (loginEmailController.text == "" &&
@@ -472,7 +473,7 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     }
   }
-
+*/
   //Metodo per il click del bottone da touch
   Future<void> _LoginButton() async {
     if (loginEmailController.text == "" ||
@@ -490,18 +491,32 @@ class _LoginScreenState extends State<LoginScreen> {
           //CheckCredenziali corrette
           showCheckCredenzialiDialog(context);
           String emailSafe = loginEmailController.text.replaceAll(" ", "");
+
+          bool isClub = await Auth_Handler.checkClubLogin(emailSafe);
+
           Auth_Handler.FireBaseLogin(
               _rememberMe,
               context,
               emailSafe,
-              loginPasswordController.text, (result, msg) {
+              loginPasswordController.text, isClub,(result, msg) {
             if (result) {
               //Credenziali corrette -> Facciamo partire la homePage
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomeMenu()),
-              );
+
+              //Controllo se l'accaount autenticato  appartiene ad un circolo
+              if(isClub){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeMenuClub()),
+                );
+              }else{
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomeMenu()),
+                );
+              }
+
+
             } else {
               Navigator.pop(context);
               CustomSnackBar(context, Text(msg));

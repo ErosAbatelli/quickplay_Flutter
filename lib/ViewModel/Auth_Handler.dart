@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Users.dart';
 import "package:quickplay/models/models.dart";
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +26,7 @@ class Auth_Handler{
   }
 
 
-  static setLOGGED_IN_Context( BuildContext context,bool ricordami ,String email,String password, myCallBack(bool result)) async {
+  static setLOGGED_IN_Context( BuildContext context,bool ricordami ,String email,String password,bool isClub, myCallBack(bool result)) async {
     LOGGED_IN = true;
     if (ricordami) {
       prefs = await SharedPreferences.getInstance();
@@ -44,34 +43,31 @@ class Auth_Handler{
         location = await ref.getDownloadURL();
 
       }
-
-
       profileImg = location;
       await prefs.setBool("ricordami", true);
       await prefs.setString("email", email);
       await prefs.setString("password", password);
     }
-    DB_Handler_Users.SearchUsersByEmail(email, (returnedUser){
-
-      //Assegno a CURRENT USER i parametri ritornati (se sono != da null)
-
-      if(returnedUser!=null){
-        CURRENT_USER = User(
-            returnedUser.nome,
-            returnedUser.cognome,
-            returnedUser.email,
-            returnedUser.telefono
-        );
-        passwordCU = password;
-        myCallBack(true);
-      }else{
-        CURRENT_USER = null;
-        myCallBack(false);
-      }
-
-
-    });
-
+    if(isClub){
+      //Inserimento info sul "Current_CLub"
+    }else{
+      DB_Handler_Users.SearchUsersByEmail(email, (returnedUser){
+        //Assegno a CURRENT USER i parametri ritornati (se sono != da null)
+        if(returnedUser!=null){
+          CURRENT_USER = User(
+              returnedUser.nome,
+              returnedUser.cognome,
+              returnedUser.email,
+              returnedUser.telefono
+          );
+          passwordCU = password;
+          myCallBack(true);
+        }else{
+          CURRENT_USER = null;
+          myCallBack(false);
+        }
+      });
+    }
   }
 
 
@@ -85,11 +81,11 @@ class Auth_Handler{
   prefs.setBool("remember", false);
   }
 
-  static FireBaseLogin(bool ricordami,BuildContext context,String email,String password,myCallBack(bool result,String msg)) async{
+  static FireBaseLogin(bool ricordami,BuildContext context,String email,String password,bool isClub, myCallBack(bool result,String msg)) async{
        try{
          var user = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
          if(user.user.isEmailVerified){
-           setLOGGED_IN_Context(context, ricordami, email, password, (result) {
+           setLOGGED_IN_Context(context, ricordami, email, password, isClub,(result) {
              myCallBack(true, "");
            });
          }else{
@@ -143,7 +139,17 @@ class Auth_Handler{
           myCallBack(false,"Errore durante la registrazione.");
       }
     }
+  }
 
+  static Future<bool> checkClubLogin(String email) async {
+    var clubs = await myRef.collection("clubs").getDocuments();
+    var returnedValue = false;
+    clubs.documents.forEach((club) {
+      if(club.data["email"]==email){
+        returnedValue = true;
+      }
+    });
+    return returnedValue;
   }
 
 
