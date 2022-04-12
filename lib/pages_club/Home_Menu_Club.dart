@@ -1,10 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quickplay/ViewModel/DB_Handler_Reservations.dart';
 import 'package:quickplay/pages/QrCode/QrCode_scan.dart';
-import 'package:quickplay/utils/dialog_helper.dart';
-import 'package:quickplay/utils/drawerMenu/drawerMenu/itemDrawerMenu.dart';
-import 'package:quickplay/utils/drawerMenu/flutter_advanced_drawer.dart';
+import 'package:quickplay/pages_club/home_profile_club.dart';
+
+import '../ViewModel/Auth_Handler.dart';
 
 
 
@@ -16,7 +17,6 @@ class HomeMenuClub extends StatefulWidget {
 }
 
 class _HomeMenuState extends State<HomeMenuClub> {
-  final _advancedDrawerController = AdvancedDrawerController();
   int _selectedIndex = -1;
 
   @override
@@ -29,17 +29,7 @@ class _HomeMenuState extends State<HomeMenuClub> {
   Widget build(BuildContext context) {
     _selectedIndex = -1;
     return WillPopScope(
-      child: AdvancedDrawer(
-          backdropColor: Colors.blueGrey,
-          controller: _advancedDrawerController,
-          animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 300),
-          animateChildDecoration: true,
-          rtlOpening: false,
-          disabledGestures: false,
-          childDecoration: const BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(16)),
-          ),
+
           child: Scaffold(
             appBar: PreferredSize(
               preferredSize: Size.fromHeight(50.0),
@@ -69,13 +59,6 @@ class _HomeMenuState extends State<HomeMenuClub> {
                     )
                 ),
                 backgroundColor: Colors.white,
-                leading: Builder(
-                  builder: (context) => IconButton(
-                    icon: Icon(Icons.menu_sharp),
-                    color: Colors.black,
-                    onPressed: _handleMenuButtonPressed,
-                  ),
-                ),
               ),
             ),
             body: Container(
@@ -135,18 +118,14 @@ class _HomeMenuState extends State<HomeMenuClub> {
                                                     0, 136, 255, 1),
                                               ),
                                               children: [
-                                                // TextSpan(
-                                                //   text: Auth_Handler.CURRENT_USER.nome
-                                                //       .capitalize() +
-                                                //       " " +
-                                                //       Auth_Handler
-                                                //           .CURRENT_USER.cognome
-                                                //           .capitalize(),
-                                                //   style: TextStyle(
-                                                //       fontSize: 24,
-                                                //       fontWeight: FontWeight.bold,
-                                                //       color: Colors.black),
-                                                // )
+                                                TextSpan(
+                                                   text: Auth_Handler.CURRENT_CLUB.nome
+                                                       .capitalize(),
+                                                   style: TextStyle(
+                                                       fontSize: 24,
+                                                       fontWeight: FontWeight.bold,
+                                                       color: Colors.black),
+                                                 )
                                               ])),
                                     ],
                                   ),
@@ -163,22 +142,10 @@ class _HomeMenuState extends State<HomeMenuClub> {
               ),
             ),
           ),
-
-          /** DRAWER MENU CONFIGURATION **/
-          drawer: GlobalItemDrawer()
-      ),
-      onWillPop: _onBackPressed,
     );
   }
 
-  void _handleMenuButtonPressed() {
-    _advancedDrawerController.showDrawer();
-  }
 
-  Future<bool> _onBackPressed() {
-    _selectedIndex = -1;
-    return DialogHelper.exit(context);
-  }
 
   Widget getGridView() {
     return GridView.count(
@@ -191,8 +158,9 @@ class _HomeMenuState extends State<HomeMenuClub> {
       children: <Widget>[
         //il "true" distanzia a destra
         //il "false" distanzia a sinistra
-        createTile(0, _selectedIndex, false, 'Scannerizza QR CODE', Colors.purple, Icons.sports_football),
-        createTile(1, _selectedIndex, true, 'Visualizza Prenotazioni', Colors.orange, Icons.local_activity),
+        createTile(0, _selectedIndex, false, 'Scannerizza QR CODE', Colors.purple, Icons.qr_code),
+        createTile(1, _selectedIndex, true, 'Visualizza Prenotazioni', Colors.orange, Icons.list_alt),
+        createTile(2, _selectedIndex, true, 'Modifica Info Circolo', Colors.green, Icons.edit_location_outlined),
         //createTile(2, _selectedIndex, false, 'Unisciti alla Prenotazione', Colors.red, Icons.app_settings_alt),
       ],
     );
@@ -220,15 +188,16 @@ class _HomeMenuState extends State<HomeMenuClub> {
             /**
              * VISUALIZZA PRENOTAZIONI
              */
-            if (_selectedIndex == 1) //Visualizza prenotazioni
-                {
+            if (_selectedIndex == 1){
+             // DB_Handler_Reservations.getAllClubsReservations();
             }
 
             /**
-             * UNISCITI A  PRENOTAZIONE
+              Modifica circolo
              */
             if (_selectedIndex == 2) {
-
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ClubProfile()));
             }
 
             setState(() {});

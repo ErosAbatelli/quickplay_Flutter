@@ -335,7 +335,7 @@ class _RegisterScreenState extends State<FormCircoli> {
                         target: LatLng(initialPos.latitude, initialPos.longitude),
                         zoom: 10,
                       ),
-                      onCameraMove: ((_position) => updateLocation(_position)),
+
                       onMapCreated: (GoogleMapController controller) {
                         mapController = controller;
                       },
@@ -398,15 +398,6 @@ class _RegisterScreenState extends State<FormCircoli> {
         return alert;
       },
     );
-  }
-
-
-
-  void updateLocation(CameraPosition _position) {
-    Position newMarkerPosition = Position(
-        latitude: _position.target.latitude,
-        longitude: _position.target.longitude);
-    initialPos = Position(latitude: _position.target.latitude, longitude: _position.target.longitude);
   }
 
 

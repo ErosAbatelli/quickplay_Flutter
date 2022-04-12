@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:quickplay/ViewModel/DB_Handler_Clubs.dart';
 import 'package:quickplay/ViewModel/DB_Handler_Users.dart';
 import "package:quickplay/models/models.dart";
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,6 +19,8 @@ class Auth_Handler{
   static bool LOGGED_IN = false;
   static User CURRENT_USER  = null;
   static String profileImg = "";
+
+  static Club CURRENT_CLUB = null;
 
   static String passwordCU = "";
 
@@ -49,7 +52,13 @@ class Auth_Handler{
       await prefs.setString("password", password);
     }
     if(isClub){
-      //Inserimento info sul "Current_CLub"
+        CURRENT_CLUB = await DB_Handler_Clubs.getClubByEmail(email);
+        if(CURRENT_CLUB != null){
+          passwordCU = password;
+          myCallBack(true);
+        }else{
+          myCallBack(false);
+        }
     }else{
       DB_Handler_Users.SearchUsersByEmail(email, (returnedUser){
         //Assegno a CURRENT USER i parametri ritornati (se sono != da null)

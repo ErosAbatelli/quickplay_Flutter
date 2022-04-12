@@ -82,6 +82,22 @@ class DB_Handler_Clubs{
     return Club(record["id_circolo"], record["nome"], record["telefono"], record["email"], record["docce"],record["posizione"].latitude, record["posizione"].longitude);
   }
 
+  static Future<Club> getClubByEmail(String email) async{
+    var data;
+    QuerySnapshot clubs = await myRef.collection("clubs").getDocuments();
+    Club returnedClub = null;
+    clubs.documents.forEach((record) {
+        if(record.data["email"]==email){
+          returnedClub = Club(record["id_circolo"], record["nome"], record["telefono"], record["email"], record["docce"],record["posizione"].latitude, record["posizione"].longitude);
+        }
+    });
+    return returnedClub;
+  }
+
+
+
+
+
   static Future<void> getFilteredClubsAndCourt(int distanza,int prezzo,bool docce, bool riscaldamento, bool coperto, String superficie , List<Court>campiPerSportNonFiltrati , callback(List<Club> circoli, List<Court> campi)) async {
     Position myPosition;
     List<Court> campiPerSportFiltrati = [];

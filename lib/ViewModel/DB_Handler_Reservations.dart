@@ -43,8 +43,8 @@ class DB_Handler_Reservations {
 
 
   static void getListOfReservations(String giorno,int campo,int circolo,callback(List<Prenotazione> prenotazioni)) async{
-    String reservationDocument = circolo.toString()+"-"+campo.toString()+"-"+giorno;
-    var records = await myRef.collection("prenotazione").document(reservationDocument).collection("prenotazioni").getDocuments();
+    var records = await myRef.collection("prenotazione").document(circolo.toString()).collection("giorni").document(giorno.toString())
+        .collection("campi").document(campo.toString()).collection("prenotazioni").getDocuments();
     List<Prenotazione> prenotazioni = [];
     records.documents.forEach((element) {
       DocumentReference ref = element.data['prenotatore'] as DocumentReference;
@@ -83,10 +83,15 @@ class DB_Handler_Reservations {
     Timestamp tsFine = Timestamp.fromMillisecondsSinceEpoch(dtFine.millisecondsSinceEpoch);
     DocumentReference prenotatore = myRef.document("/users/"+Auth_Handler.CURRENT_USER.email);
 
-    var doc = await myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).get();
+    //var doc = await myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).get();
+    var doc = await myRef.collection("prenotazione").document(id_circolo.toString())
+        .collection("giorni").document(data.toString()).collection("campi").document(n_campo.toString()).get();
+
     if(doc.exists){
       //Registra la prenotazione
-      myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).collection("prenotazioni").document(codedID).setData({
+      myRef.collection("prenotazione").document(id_circolo.toString())
+          .collection("giorni").document(data.toString()).collection("campi").document(n_campo.toString()).collection("prenotazioni")
+          .document(codedID).setData({
         "oraFine" : tsFine,
         "oraInizio" : tsInizio,
         "prenotatore" : prenotatore,
@@ -94,12 +99,18 @@ class DB_Handler_Reservations {
       });
     }else{
       //Crea il documento (compreso il dummy text) e registra la prenotazione
-      myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).setData({"dummy" : "dummyText"}).whenComplete((){
-        myRef.collection("prenotazione").document(id_circolo.toString()+"-"+n_campo.toString()+"-"+data).collection("prenotazioni").document(codedID).setData({
-          "oraFine" : tsFine,
-          "oraInizio" : tsInizio,
-          "prenotatore" : prenotatore,
-          "checked" : false
+      myRef.collection("prenotazione").document(id_circolo.toString()).setData({"dummy" : "dummyText"}).whenComplete((){
+        myRef.collection("prenotazione").document(id_circolo.toString()).collection("giorni").document(data.toString()).setData({"dummy" : "dummyText"}).whenComplete((){
+          myRef.collection("prenotazione").document(id_circolo.toString()).collection("giorni").document(data.toString()).collection("campi").document(n_campo.toString()).setData({"dummy" : "dummyText"}).whenComplete((){
+            myRef.collection("prenotazione").document(id_circolo.toString())
+                .collection("giorni").document(data.toString()).collection("campi").document(n_campo.toString()).collection("prenotazioni")
+                .document(codedID).setData({
+              "oraFine" : tsFine,
+              "oraInizio" : tsInizio,
+              "prenotatore" : prenotatore,
+              "checked" : false
+            });
+          });
         });
       });
     }
@@ -174,8 +185,8 @@ class DB_Handler_Reservations {
     }
   }
 
-  static Future<String> newPartecipazione(String codPren) async{
 
+  static Future<String> newPartecipazione(String codPren) async{
     if(codPren.length!=20 && codPren.length!=19){
       return "Codice non valido";
     }
@@ -222,6 +233,38 @@ class DB_Handler_Reservations {
       } );
     return partecipanti;
   }
+
+  //=======================================METODI PER UTENTI CIRCOLO===========================================================
+
+
+/*-------------------------------------------------------------------------------------------------STATO DELL'ARTE-------------
+  static Future<List<Prenotazione>> getAllClubsReservations() async {
+    QuerySnapshot giorni = await myRef.collection("prenotazione").getDocuments();
+    List<Prenotazione> prenotazioni = [];
+    var prenGiornata;
+    giorni.documents.forEach((giorno) async {
+      var idSplit = giorno.documentID.split("-");
+      if(idSplit[0]==Auth_Handler.CURRENT_CLUB.id.toString()) {
+        prenGiornata = await myRef.collection("prenotazione").document(giorno.documentID.toString()).collection("prenotazioni").getDocuments();
+        prenGiornata.documents.forEach((element) {
+          DocumentReference ref = element.data['prenotatore'] as DocumentReference;
+          Timestamp timestamp = element.data['oraInizio'];
+          DateTime oraInizio = DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+          timestamp = element.data['oraFine'];
+          DateTime oraFine = DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+          prenotazioni.add(Prenotazione(element.data["id"],ref.documentID,oraInizio,oraFine,element.data["checked"]));
+        });
+      }
+    });
+    return prenotazioni;
+  }
+
+
+  */
+
+
+
+
 
   static String crypt(String text, int shift){
     List<int> codeStr = [];
