@@ -156,30 +156,37 @@ class DB_Handler_Reservations {
     String resDoc = codSplit[0]+"-"+codSplit[1]+"-"+codSplit[2];
 
 
-    var prenotazione = await myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).get();
+    //var prenotazione = await myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).get();
+    var prenotazione = await myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+        .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).get();
+    
     String prenotatoreEmail = prenotazione.data["prenotatore"].documentID;
     if(prenotatoreEmail==Auth_Handler.CURRENT_USER.email){
       //A cancellare la prenotazione è il prenotatore quindi deve sparire ogni traccia
       //Quindi -Prenotazione + Record di essa dai partecipanti
 
-      var partecipanti = await myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).collection("partecipanti").getDocuments();
+      var partecipanti = await myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+          .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).collection("partecipanti").getDocuments();
       //Togliamo la partecipazione da ogni partecipante
       partecipanti.documents.forEach((element) {
         myRef.collection("users").document(element.documentID).collection("prenotazioni").document(codPren).delete();
         //Cancelliamo prima i partecipanti dalla prenotazione e poi la eliminiamo (BUG dei partecipanti che restano anche se la prenotazione è sparita)
-        myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).collection("partecipanti").document(element.documentID).delete();
+        myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+            .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).collection("partecipanti").document(element.documentID).delete();
       });
       //Togliamo la prenotazione dalla lista del prenotatore
       myRef.collection("users").document(Auth_Handler.CURRENT_USER.email).collection("prenotazioni").document(codPren).delete();
       //Cancelliamo la prenotazione
-      myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).delete();
+      myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+          .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).delete();
 
 
     }else{
       //Un partecipante si sta chiamando fuori ->
       // Dobbiamo cancellare la sua partecipazione e levarlo dai partecipanti
       await myRef.collection("users").document(Auth_Handler.CURRENT_USER.email).collection("prenotazioni").document(codPren).delete();
-      myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).collection("partecipanti").document(Auth_Handler.CURRENT_USER.email).delete();
+      myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+          .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).collection("partecipanti").document(Auth_Handler.CURRENT_USER.email).delete();
 
 
     }
@@ -193,18 +200,20 @@ class DB_Handler_Reservations {
     try{
       String uncodedId = decrypt(codPren, 15);
       var codSplit = uncodedId.split("&");
-      String codGiorno = codSplit[0]+"-"+codSplit[1]+"-"+codSplit[2];
-      var prenotazione = await myRef.collection("prenotazione").document(codGiorno).collection("prenotazioni").document(codPren).get();
+      var prenotazione = await myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+          .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).get();
       if(prenotazione==null){
         return "Codice inesistente";
       }else{
         if(prenotazione.data["prenotatore"].documentID == Auth_Handler.CURRENT_USER.email){
           return "Non puoi partecipare alla tua stessa prenotazione";
         }else{
-          myRef.collection("prenotazione").document(codGiorno).collection("prenotazioni").document(codPren).collection("partecipanti").document(Auth_Handler.CURRENT_USER.email).setData({
+          myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+              .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).collection("partecipanti").document(Auth_Handler.CURRENT_USER.email).setData({
             "nome" : Auth_Handler.CURRENT_USER.nome,
             "cognome" : Auth_Handler.CURRENT_USER.cognome
           });
+
           myRef.collection("users").document(Auth_Handler.CURRENT_USER.email).collection("prenotazioni").document(codPren).setData({
             "oraInizio" : prenotazione.data["oraInizio"],
             "oraFine" : prenotazione.data["oraFine"],
@@ -224,9 +233,9 @@ class DB_Handler_Reservations {
 
     String uncodedID = decrypt(codPren, 15);
     var codSplit = uncodedID.split("&");
-    String resDoc = codSplit[0]+"-"+codSplit[1]+"-"+codSplit[2];
 
-    var records = await myRef.collection("prenotazione").document(resDoc).collection("prenotazioni").document(codPren).collection("partecipanti").getDocuments();
+    var records = await myRef.collection("prenotazione").document(codSplit[0].toString()).collection("giorni")
+        .document(codSplit[2].toString()).collection("campi").document(codSplit[1].toString()).collection("prenotazioni").document(codPren).collection("partecipanti").getDocuments();
     records.documents.forEach((element) {
 
       partecipanti.add(Partecipante(element.data["nome"],element.data["cognome"],element.documentID));
