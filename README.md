@@ -1,10 +1,10 @@
 # quickplay
 
-QuickPlay è un applicazione in via di sviluppo, nata per rendere più veloci e organizzative le prenotazioni di un campo di un circolo affiliato.
+QuickPlay è un'applicazione in via di sviluppo, nata per rendere più veloci e organizzate le prenotazioni di un campo di un circolo affiliato.
 
-In particolare permette:
+In particolare, permette
 - all'utente: di potersi prenotare in un campo (o più) di un circolo;
-- al circolo: di poter gestire in maniera semplice ed efficace tutte le pronotazioni dei vari utenti.
+- al circolo: di poter gestire in maniera semplice ed efficace tutte le prenotazioni dei vari utenti.
 
 ## Esempio di prenotazione di un campo 
 
@@ -19,7 +19,7 @@ Confermata la validità dell'email, l'utente potrà accedere alla Home principal
 - Visualizza prenotazione
 - Unisciti alla prenotazione: permette all'utente di unirsi ad una prenotazione già esistente attraverso un codice
 
-Inoltre in alto a sinistra è presente un drawer menu, che permette all'utente di effettuare altre operazioni:
+Inoltre in alto a sinistra è presente un drawer menu che permette all'utente di effettuare altre operazioni:
 
 <img src="https://user-images.githubusercontent.com/64958382/185955380-b303833a-f44e-4623-a694-5cb3d4d7e308.jpg" width="200" height="400" />
 
